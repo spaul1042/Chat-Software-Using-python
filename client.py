@@ -10,6 +10,7 @@ from tkinter import *
 import sqlite3 
 
 HOST = "127.0.0.2"
+# HOST = "172.16.177.213"
 PORT = 9000
 
 # We create a client which has a socket , The socket connects to Host and port 
@@ -56,32 +57,30 @@ class Client:
             window.destroy()  #closes the previous window
             login_window = Tk() #creates a new window for loging in
             login_window.title("LogIn")  #set title to the window
-            login_window.geometry("400x250")  #set dimensions to the window
+            login_window.geometry("800x500")  #set dimensions to the window
             #add 2 Labels to the window
             l1 = Label(login_window,text="email: ",font="times 20")
-            l1.grid(row=1,column=0)
-
+            l1.place(x = 340,y = 200) 
             l2 = Label(login_window,text="Password: ",font="times 20")
-            l2.grid(row=2,column=0)
-
-            l3 = Label(login_window,font="times 20")
-            l3.grid(row=5,column=1)
+            l2.place(x = 340,y = 260) 
+            l3 = Label(login_window,font="times 20") 
+            l3.place(x = 340,y = 320)
 
             #creating 2 adjacent text entries
             email_text = StringVar() #stores string
             e1 = Entry(login_window,textvariable=email_text)
-            e1.grid(row=1,column=1)
+            e1.place(x = 500,y = 200)
 
             password_text = StringVar()
             e2 = Entry(login_window,textvariable=password_text,show='*')
-            e2.grid(row=2,column=1)
+            e2.place(x = 500,y = 260)
 
             #create 1 button to login
             b = Button(login_window,text="login",width=20,command=login_database)
             b.grid(row=4,column=1)
 
             login_window.mainloop()
-        
+
         #Actions on Pressing Signup button
         def signup():
             #Database action on pressing signup button
@@ -94,25 +93,24 @@ class Client:
                 
                 #execute message after account successfully created
                 l4 = Label(signup_window,text="account created",font="times 15")
-                l4.grid(row=6,column=2)
+                l4.place(x = 340,y = 380)
                 
                 conn.commit()  #save the changes 
                 conn.close() #close the connection
 
             window.destroy()  #closes the previous window
             signup_window = Tk() #creates a new window for signup process
-            signup_window.geometry("400x250") #dimensions for new window
+            signup_window.geometry("800x500") #dimensions for new window
             signup_window.title("Sign Up") #title for the window
             #create 3 Labels
             l1 = Label(signup_window,text="User Name: ",font="times 20")
-            l1.grid(row=1,column=1)
+            l1.place(x = 340,y = 200)
 
             l2 = Label(signup_window,text="User email: ",font="times 20")
-            l2.grid(row=2,column=1)
+            l2.place(x = 340,y = 260)
 
             l3 = Label(signup_window,text="Password: ",font="times 20")
-            l3.grid(row=3,column=1)
-
+            l3.place(x = 340,y = 320)
             #create 3 adjacent text entries
             name_text = StringVar() #declaring string variable for storing name and password
             e1 = Entry(signup_window,textvariable=name_text)
@@ -134,18 +132,17 @@ class Client:
                     
         #main window code and driver code
         #give dimensions to the window
-        window.geometry("300x150")
+        window.geometry("800x500")
         #add title to the window
         window.title("Login and Signup system")
         #adding the label "Register Here"
-        label1 = Label(window, text="Register Here!",font="times 20")
-        label1.grid(row=1,column=2,columnspan=2)
+        label1 = Label(window, text="Register Here!",font="times 20").place(x = 340,y = 200) 
+        
         #adding two buttons - login and signup
-        button1 = Button(window,text="Login",width=20,command=login)
-        button1.grid(row=2,column=2)
+        button1 = Button(window,text="Login",width=20,command=login).place(x = 250,y = 260)
 
-        button2 = Button(window,text="Signup",width=20,command=signup)
-        button2.grid(row=2,column=3)
+        button2 = Button(window,text="Signup",width=20,command=signup).place(x = 435,y = 260)
+        
         #calling mainloop method which is used when your application is ready to run and it tells the code to keep displaying   
         
         # # The below two threads will run simultaneously

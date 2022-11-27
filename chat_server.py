@@ -3,13 +3,22 @@
         # Subnet Mask . . . . . . . . . . . : 255.255.240.0
         # So we should assure that the ip addresses conected over LAN are unique ( Checking leave for later )
 
+# Accounts
 
+# sudeeprnp@gmail.com 
+# pass -> 1234
 
+# s@gmail.com 
+# pass-> 1234
+
+# a@gmail.com 
+# pass-> 1234
 
 import socket
 import threading 
 
 HOST = "127.0.0.2"
+# HOST = "172.16.177.213"
 PORT = 9000
 
 
