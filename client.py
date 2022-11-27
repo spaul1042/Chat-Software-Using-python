@@ -32,7 +32,150 @@ class Client:
         self.nickname  = " "
         #create an object to create a window
         window = Tk()
-        
+
+        def reset(new_pass,client_email):
+            conn = sqlite3.connect("1.db") #create an object to call sqlite3 module & connect to a database 1.db
+            #once you have a connection, you can create a cursor object and call its execute() method to perform SQL commands
+            cur = conn.cursor()
+            cur.execute("UPDATE test set password text = "+new_pass+" where email text = "+str(client_email))
+  
+            # save the changes
+            cur.commit()
+
+        def pass_reset(client_email):
+            import smtplib
+            from email.mime.multipart import MIMEMultipart
+            from email.mime.text import MIMEText
+            from email.mime.base import MIMEBase
+            from email import encoders
+            
+            from random import randint
+            from time import sleep
+
+            def send_mail(fromaddr, frompasswd, toaddr, msg_subject, msg_body):
+                try:
+                    msg = MIMEMultipart()
+                    print("[+] Message Object Created")
+                except:
+                    print("[-] Error in Creating Message Object")
+                    return
+
+                msg['From'] = fromaddr
+
+                msg['To'] = toaddr
+
+                msg['Subject'] = msg_subject
+
+                body = msg_body
+
+                msg.attach(MIMEText(body, 'plain'))
+                
+                # p = MIMEBase('application', 'octet-stream')
+
+                # encoders.encode_base64(p)
+
+                # try:
+                #     msg.attach(p)
+                #     print("[+] File Attached")
+                # except:
+                #     print("[-] Error in Attaching file")
+                #     return
+
+                try:
+                    s = smtplib.SMTP('smtp.gmail.com', 587)
+                    # s = smtplib.SMTP('mail.iitp.ac.in', 587)
+                    print("[+] SMTP Session Created")
+                except:
+                    print("[-] Error in creating SMTP session")
+                    return
+
+                s.starttls()
+
+                try:
+                    s.login(fromaddr, frompasswd)
+                    print("[+] Login Successful")
+                except:
+                    print("[-] Login Failed")
+
+                text = msg.as_string()
+
+                try:
+                    s.sendmail(fromaddr, toaddr, text)
+                    print("[+] Mail Sent successfully")
+                except:
+                    print('[-] Mail not sent')
+
+                s.quit()
+
+            def isEmail(x):
+                if ('@' in x) and ('.' in x):
+                    return True
+                else:
+                    return False
+
+            FROM_ADDR = "adityaramdaspatil@gmail.com" #email address can be changed
+            FROM_PASSWD = "changeme"
+
+            rand=randint(1000,9999)
+
+            Subject = "password reset"
+            Body ='''
+            enter this activation code
+            '''+str(rand)
+            from datetime import datetime
+
+            start_time = datetime.now()
+
+            #what a ever is the limit of your sending mails, like gmail has 500.
+            max_count = 9999999
+            count=0
+            try:
+                if isEmail(client_email) and count <=max_count:
+                    count+=1
+                    send_mail(FROM_ADDR, FROM_PASSWD, client_email, Subject, Body)
+                print("Count Value: ", count)
+                print("Sleeping . .. . ")
+                sleep(randint(1,3))
+            except:
+                print("Lets see ")
+
+            print("Count Max is reached: " ,count)
+
+            end_time = datetime.now()
+            print('Duration: {}'.format(end_time - start_time))
+
+            window.destroy()  #closes the previous window
+            reset_window = Tk() #creates a new window for loging in
+            reset_window.title("Reset Password")  #set title to the window
+            reset_window.geometry("800x500")  #set dimensions to the window
+            #add Label to the window
+            l2 = Label(reset_window,text="New Password: ",font="times 20")
+            l2.place(x = 340,y = 260) 
+            l3 = Label(reset_window,font="times 20") 
+            l3.place(x = 390,y = 389)
+
+            #creating adjacent text entries
+            
+            code = StringVar()
+            e1 = Entry(reset_window,textvariable=code,show='*')
+            e1.place(x = 500,y = 329)
+            if code ==rand:
+                new_pass = StringVar()
+                e2 = Entry(reset_window,textvariable=new_pass,show='*')
+                e2.place(x = 500,y = 209)
+
+                cnf_pass = StringVar()
+                e3 = Entry(reset_window,textvariable=cnf_pass,show='*')
+                e3.place(x = 500,y = 269)
+
+                #create 1 button to reset pass
+                b = Button(reset_window,text="reset",width=13,command=reset(new_pass,client_email,rand))
+                b.place(x = 420,y = 329)
+            else:
+                print("code does not match")
+            reset_window.mainloop()
+
+                    
         #Actions on Pressing Login Button
         def login():
             def login_database():
@@ -78,6 +221,10 @@ class Client:
             #create 1 button to login
             b = Button(login_window,text="login",width=13,command=login_database)
             b.place(x = 420,y = 329)
+
+            #create 1 button to reset
+            b2 = Button(login_window,text="reset",width=13,command=pass_reset(email_text))
+            b2.place(x = 620,y = 329)
 
             login_window.mainloop()
 
