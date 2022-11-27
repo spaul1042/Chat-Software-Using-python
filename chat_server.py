@@ -14,6 +14,9 @@
 # a@gmail.com 
 # pass-> 1234
 
+# 1 
+# pass-> 1
+
 import socket
 import threading 
 
@@ -24,7 +27,6 @@ PORT = 9000
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind((HOST, PORT))
-
 
 server.listen(100)
 

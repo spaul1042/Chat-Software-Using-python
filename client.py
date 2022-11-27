@@ -1,5 +1,5 @@
 # if message == "NICK":
-#                     self.sock.send(self.nickname.encode('utf-8'))
+#               self.sock.send(self.nickname.encode('utf-8'))
 
 
 import socket 
@@ -44,7 +44,7 @@ class Client:
                 print(row)
                 if row!=[]:
                     user_name=row[0][1]
-                    l3.config(text="user name found with name: "+user_name)
+                    # l3.config(text="user name found with name: "+user_name)
                     # This is the place from where the user will get logged in and will see the signup window further
                     self.nickname  = user_name
                     self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -64,20 +64,20 @@ class Client:
             l2 = Label(login_window,text="Password: ",font="times 20")
             l2.place(x = 340,y = 260) 
             l3 = Label(login_window,font="times 20") 
-            l3.place(x = 340,y = 320)
+            l3.place(x = 390,y = 389)
 
             #creating 2 adjacent text entries
             email_text = StringVar() #stores string
             e1 = Entry(login_window,textvariable=email_text)
-            e1.place(x = 500,y = 200)
+            e1.place(x = 500,y = 209)
 
             password_text = StringVar()
             e2 = Entry(login_window,textvariable=password_text,show='*')
-            e2.place(x = 500,y = 260)
+            e2.place(x = 500,y = 269)
 
             #create 1 button to login
-            b = Button(login_window,text="login",width=20,command=login_database)
-            b.grid(row=4,column=1)
+            b = Button(login_window,text="login",width=13,command=login_database)
+            b.place(x = 420,y = 329)
 
             login_window.mainloop()
 
@@ -93,7 +93,7 @@ class Client:
                 
                 #execute message after account successfully created
                 l4 = Label(signup_window,text="account created",font="times 15")
-                l4.place(x = 340,y = 380)
+                l4.place(x = 420,y = 449)
                 
                 conn.commit()  #save the changes 
                 conn.close() #close the connection
@@ -114,19 +114,19 @@ class Client:
             #create 3 adjacent text entries
             name_text = StringVar() #declaring string variable for storing name and password
             e1 = Entry(signup_window,textvariable=name_text)
-            e1.grid(row=1,column=2)
+            e1.place(x = 500,y = 209)
 
             email_text = StringVar()
             e2 = Entry(signup_window,textvariable=email_text)
-            e2.grid(row=2,column=2)
+            e2.place(x = 500,y = 269)
 
             password_text = StringVar()
             e3 = Entry(signup_window,textvariable=password_text,show='*')
-            e3.grid(row=3,column=2)
+            e3.place(x = 500,y = 329)
 
             #create 1 button to signup
             b1 = Button(signup_window,text="signup",width=20,command=signup_database)
-            b1.grid(row=4,column=2)
+            b1.place(x = 420,y = 389)
 
             signup_window.mainloop()
                     
