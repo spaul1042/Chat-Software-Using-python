@@ -17,6 +17,15 @@
 # 1 
 # pass-> 1
 
+# server 
+# client.send() -> server sends message to a specific client 
+# client.recv(1024) -> server requests message from a specific client 
+# broadcast -> server sends message to all connected  clients
+
+# Client side 
+# client.sock.send() -> a specific client sends message  to server ant then server broadcasts the message
+# client.sock.recv() -> a specific client receives message from the server
+
 import socket
 import threading 
 import sqlite3
