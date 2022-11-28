@@ -1,5 +1,73 @@
+# # Python program to create
+# # a file explorer in Tkinter
+
+# # import all components
+# # from the tkinter library
+# from tkinter import *
+
+# # import filedialog module
+# from tkinter import filedialog
+
+# # Function for opening the
+# # file explorer window
+# def browseFiles():
+# 	filename = filedialog.askopenfilename(initialdir = "/",
+# 										title = "Select a File",
+# 										filetypes = (("Text files",
+# 														"*.txt*"),
+# 													("all files",
+# 														"*.*")))
+	
+# 	# Change label contents
+# 	label_file_explorer.configure(text="File Opened: "+filename)
+	
+	
+																								
+# # Create the root window
+# window = Tk()
+
+# # Set window title
+# window.title('File Explorer')
+
+# # Set window size
+# window.geometry("500x500")
+
+# #Set window background color
+# window.config(background = "white")
+
+# # Create a File Explorer label
+# label_file_explorer = Label(window,
+# 							text = "File Explorer using Tkinter",
+# 							width = 100, height = 4,
+# 							fg = "blue")
+
+	
+# button_explore = Button(window,
+# 						text = "Browse Files",
+# 						command = browseFiles)
+
+# button_exit = Button(window,
+# 					text = "Exit",
+# 					command = exit)
+
+# # Grid method is chosen for placing
+# # the widgets at respective positions
+# # in a table like structure by
+# # specifying rows and columns
+# label_file_explorer.grid(column = 1, row = 1)
+
+# button_explore.grid(column = 1, row = 2)
+
+# button_exit.grid(column = 1,row = 3)
+
+# # Let the window wait for any events
+# window.mainloop()
+
+
 # if message == "NICK":
 #               self.sock.send(self.nickname.encode('utf-8'))
+
+
 import socket 
 import threading
 import tkinter 
@@ -10,7 +78,6 @@ import sqlite3
 HOST = "127.0.0.2"
 # HOST = "0.0.0.0"
 PORT = 9000
-
 
 # We create a client which has a socket , The socket connects to Host and port 
 # The client takes nickname fro the dialog box 
@@ -124,7 +191,7 @@ class Client:
     
     def __init__(self , host , port):
         
-        msg = tkinter.Tk()
+        # msg = tkinter.Tk()
         # msg.withdraw()
         # self.nickname = simpledialog.askstring("Nickname" , "Please Choose a nickname", parent = msg)
         
@@ -289,7 +356,6 @@ class Client:
                     b = Button(reset_window,text="reset password",width=13,command=lambda:pass_reset(e2.get(),client_email,e1.get(),str(rand),reset_window))
                     b.place(x = 420,y = 440)
                     
-
                 # window.destroy()  #closes the previous window
                 reset_window = Tk() #creates a new window for loging in
                 reset_window.title("Reset Password")  #set title to the window
@@ -360,6 +426,7 @@ class Client:
         
     def gui_loop(self):
         # The entire gui of the chat window is written here 
+        # window.destroy()
         self.win = tkinter.Tk()  # defined a tkinter window for self here 
         self.win.configure(bg ="lightgray")
         
@@ -383,6 +450,10 @@ class Client:
         self.send_button.config(font= ("Arial", 12))
         self.send_button.pack(padx = 20, pady = 5)
         
+        self.attach_button = tkinter.Button(self.win, text ="Attach" , command = self.browseFiles)
+        self.attach_button.config(font= ("Arial", 12))
+        self.attach_button.pack(padx = 20, pady = 5)
+        
         self.gui_done = True
         
         # what happens if we close the window 
@@ -401,18 +472,64 @@ class Client:
         self.sock.send(message.encode('utf-8'))
         self.input_area.delete('1.0', 'end')
     
+    def browseFiles(self):
+        from tkinter.filedialog import askopenfilename
+        import tkinter as tk
+        from tkinter import ttk
+        from tkinter import filedialog as fd
+        from tkinter.messagebox import showinfo
+        filetypes = (
+            ('text files', '*.txt'),
+            ('All files', '*.*')
+        )
+
+        filename = fd.askopenfilename(
+            title='Open a file',
+            initialdir='/',
+            filetypes=filetypes)
+
+        showinfo(
+            title='Selected File',
+            message=filename
+        )
+
+        print(filename)
+            # try:
+            #   filename = askopenfilename(initialdir = "/",title = "Select a File",filetypes = (("Text files","*.txt*"),("all files","*.*")))
+            # except:
+            #     print("Error")
+            
     def receive(self):
             while self.running:
                 try:
-                    message = self.sock.recv(1024).decode('utf-8')
-                    # if message == "Spaul":
-                    #     self.sock.send(self.nickname.encode('utf-8'))
-                    # else:
-                    if self.gui_done:
-                        self.text_area.config(state = "normal")
-                        self.text_area.insert('end', message)
-                        self.text_area.yview('end')
-                        self.text_area.config(state ='disabled')
+                    message = str(self.sock.recv(1024).decode('utf-8'))
+
+                    if(message[0] == '@'):
+                        print("user list received")
+                        print(message)
+                        active_users = message.split('@')
+                        print(active_users)
+                        # Label(self.win, font=('arial black',13),bg='Green',fg='white',text='Active Users',width=10).place(y=200,x=400)
+                        # active_users = Listbox(self.win,height=8,width=20)
+                        # active_users.place(x=80,y=230)
+                        self.active_area = tkinter.scrolledtext.ScrolledText(self.win )
+                        self.active_area.pack(padx = 20, pady = 5)
+                        self.active_area.configure(state ='disabled')
+                        for user_name in active_users:
+                            self.active_area.config(state = "normal")
+                            self.active_area.insert('end', str(user_name+'\n'))
+                            self.active_area.yview('end')
+                            self.active_area.config(state ='disabled')
+                        # disty = 100
+                        # for user_name in active_users:
+                        #     demo_label = tkinter.Label(self.win, text = str(user_name),bg = "lightgray")
+                        
+                    else:
+                        if self.gui_done:
+                            self.text_area.config(state = "normal")
+                            self.text_area.insert('end', message)
+                            self.text_area.yview('end')
+                            self.text_area.config(state ='disabled')
                 except ConnectionAbortedError:
                     break
                 except:
@@ -422,3 +539,4 @@ class Client:
 
 
 client = Client(HOST , PORT)
+
