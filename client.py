@@ -257,6 +257,7 @@ class Client:
                         l1 = Label(reset_window,text="Wrong Code: ",font="times 20")
                         l1.place(x = 340,y = 500) 
                         
+                        
                 def reset_through_email(client_email):
                     from random import randint
                     rand=randint(1000,9999)
