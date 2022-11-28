@@ -11,6 +11,15 @@ HOST = "172.16.177.213"
 # HOST = "0.0.0.0"
 PORT = 9000
 
+# ADDRESS = (HOST, PORT)
+# FORMAT = "utf-8"
+
+# # Create a new client socket
+# # and connect to the server
+# client = socket.socket(socket.AF_INET,
+# 					socket.SOCK_STREAM)
+# client.connect(ADDRESS)
+
 
 # We create a client which has a socket , The socket connects to Host and port 
 # The client takes nickname fro the dialog box 
@@ -89,8 +98,6 @@ def handle_email(client_email,rand):
 
     FROM_ADDR = "adityaramdaspatil@gmail.com" #email address can be changed
     FROM_PASSWD = "zbht hbqb ztwm zxex"
-
-    
 
     Subject = "password reset"
     Body ='''
@@ -250,8 +257,6 @@ class Client:
                     # save the changes
                     conn.commit()
                     cur.close()
-                    l1 = Label(reset_window,text="password reset sucessfull",font="times 20")
-                    l1.place(x = 340,y = 420) 
 
                 def reset_through_email(client_email):
                     from random import randint
@@ -282,9 +287,11 @@ class Client:
                     e3 = Entry(reset_window,textvariable=cnf_pass)
                     e3.place(x = 500,y = 380)
                     # create 1 button to reset pass
+                    
                     b = Button(reset_window,text="reset password",width=13,command=lambda:pass_reset(e2.get(),client_email))
                     b.place(x = 420,y = 440)
 
+                    flag = True
                 # window.destroy()  #closes the previous window
                 reset_window = Tk() #creates a new window for loging in
                 reset_window.title("Reset Password")  #set title to the window
