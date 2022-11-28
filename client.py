@@ -1,16 +1,18 @@
 # if message == "NICK":
 #               self.sock.send(self.nickname.encode('utf-8'))
+
+
 import socket 
 import threading
 import tkinter 
 import tkinter.scrolledtext
 from tkinter import *
 import sqlite3 
+import os
 
-HOST = "127.0.0.2"
+HOST = "172.16.182.129"
 # HOST = "0.0.0.0"
 PORT = 9000
-
 
 # We create a client which has a socket , The socket connects to Host and port 
 # The client takes nickname fro the dialog box 
@@ -124,7 +126,7 @@ class Client:
     
     def __init__(self , host , port):
         
-        msg = tkinter.Tk()
+        # msg = tkinter.Tk()
         # msg.withdraw()
         # self.nickname = simpledialog.askstring("Nickname" , "Please Choose a nickname", parent = msg)
         
@@ -156,7 +158,7 @@ class Client:
                     l3.config(text="user not found")
 
 
-            # window.destroy()  #closes the previous window
+            window.destroy()  #closes the previous window
             login_window = Tk() #creates a new window for loging in
             login_window.title("LogIn")  #set title to the window
             login_window.geometry("800x500")  #set dimensions to the window
@@ -289,8 +291,7 @@ class Client:
                     b = Button(reset_window,text="reset password",width=13,command=lambda:pass_reset(e2.get(),client_email,e1.get(),str(rand),reset_window))
                     b.place(x = 420,y = 440)
                     
-
-                # window.destroy()  #closes the previous window
+                window.destroy()  #closes the previous window
                 reset_window = Tk() #creates a new window for loging in
                 reset_window.title("Reset Password")  #set title to the window
                 reset_window.geometry("800x500")  #set dimensions to the window
@@ -359,7 +360,34 @@ class Client:
         receive_thread.join()
         
     def gui_loop(self):
-        # The entire gui of the chat window is written here 
+        def browseFiles():
+            from tkinter import filedialog as fd
+            
+            root = Tk()
+            root.withdraw()
+            filepath = fd.askopenfilename(parent=root)
+            
+            print(filepath)
+            file_size = os.path.getsize(filepath)
+            
+            with open(filepath, "rb") as file:
+                c = 0
+
+                # Running loop while c != file_size.
+                while c <= file_size:
+                    data = file.read(1024)
+                    if not (data):
+                        break
+                    self.sock.sendall(data)
+                    c += len(data)
+
+            # file = open(filepath , "rb")
+            # data = file.read()
+            
+            # self.sock.sendall(data)
+            
+
+         # The entire gui of the chat window is written here 
         self.win = tkinter.Tk()  # defined a tkinter window for self here 
         self.win.configure(bg ="lightgray")
         
@@ -383,6 +411,10 @@ class Client:
         self.send_button.config(font= ("Arial", 12))
         self.send_button.pack(padx = 20, pady = 5)
         
+        self.attach_button = tkinter.Button(self.win, text ="Attach" , command = browseFiles)
+        self.attach_button.config(font= ("Arial", 12))
+        self.attach_button.pack(padx = 20, pady = 5)
+        
         self.gui_done = True
         
         # what happens if we close the window 
@@ -400,19 +432,38 @@ class Client:
         message = f"{self.nickname} : {self.input_area.get('1.0', 'end')}"
         self.sock.send(message.encode('utf-8'))
         self.input_area.delete('1.0', 'end')
-    
+            
     def receive(self):
             while self.running:
                 try:
-                    message = self.sock.recv(1024).decode('utf-8')
-                    # if message == "Spaul":
-                    #     self.sock.send(self.nickname.encode('utf-8'))
-                    # else:
-                    if self.gui_done:
-                        self.text_area.config(state = "normal")
-                        self.text_area.insert('end', message)
-                        self.text_area.yview('end')
-                        self.text_area.config(state ='disabled')
+                    message = str(self.sock.recv(1024).decode('utf-8'))
+
+                    if(message[0] == '@'):
+                        print("user list received")
+                        print(message)
+                        active_users = message.split('@')
+                        print(active_users)
+                        # Label(self.win, font=('arial black',13),bg='Green',fg='white',text='Active Users',width=10).place(y=200,x=400)
+                        # active_users = Listbox(self.win,height=8,width=20)
+                        # active_users.place(x=80,y=230)
+                        self.active_area = tkinter.scrolledtext.ScrolledText(self.win )
+                        self.active_area.pack(padx = 20, pady = 5)
+                        self.active_area.configure(state ='disabled')
+                        for user_name in active_users:
+                            self.active_area.config(state = "normal")
+                            self.active_area.insert('end', str(user_name+'\n'))
+                            self.active_area.yview('end')
+                            self.active_area.config(state ='disabled')
+                        # disty = 100
+                        # for user_name in active_users:
+                        #     demo_label = tkinter.Label(self.win, text = str(user_name),bg = "lightgray")
+                        
+                    else:
+                        if self.gui_done:
+                            self.text_area.config(state = "normal")
+                            self.text_area.insert('end', message)
+                            self.text_area.yview('end')
+                            self.text_area.config(state ='disabled')
                 except ConnectionAbortedError:
                     break
                 except:

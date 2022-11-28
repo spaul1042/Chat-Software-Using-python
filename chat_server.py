@@ -30,8 +30,8 @@ import socket
 import threading 
 import sqlite3
 
-HOST = socket.gethostbyname(socket.gethostname())
-# HOST = "172.16.177.213"
+# HOST = socket.gethostbyname(socket.gethostname())
+HOST = "172.16.182.129"
 PORT = 9000
 
 sqlite3.connect('1.db')
@@ -43,7 +43,6 @@ server.listen(100)
 
 clients = []
 nicknames = []
-
 
 # For broadcasting messages 
 def broadcast(message):
@@ -62,6 +61,7 @@ def handle(client):
             client.close()
             nickname = nicknames[index]
             nicknames.remove(nickname)
+
             break
     
     
@@ -76,16 +76,23 @@ def receive():
         
         print(f"connected with {address}")
         
-        client.send("NICK".encode('utf-8'))
+        # client.send("NICK".encode('utf-8'))
+        from time import sleep
         nickname = client.recv(1024)
         
         nicknames.append(nickname)
         clients.append(client)
         
         print(f"nickname of the client is {nickname}")
-        broadcast(f":{nickname} connected to the server!\n".encode('utf-8'))       
-        client.send("Connected to the server".encode('utf-8'))
+        # broadcast(f"{nickname} connected to the server!\n".encode('utf-8'))
+        online_users= '@'
         
+        for name in nicknames:
+            online_users = online_users + str(name) + '@'
+        # print(online_users)    
+        broadcast(f"{online_users}".encode('utf-8'))
+        
+        # client.send("Connected to the server".encode('utf-8'))
         thread = threading.Thread(target =handle , args = (client,))
         thread.start()
 

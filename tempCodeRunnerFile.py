@@ -1,20 +1,17 @@
-import smtplib
-                # from random import randint
-                # rand=randint(1000,9999)
-                # # creates SMTP session
-                # s = smtplib.SMTP('smtp.gmail.com', 587)
+filetypes = (
+            #         ('text files', '*.txt'),
+            #         ('All files', '*.*')
+            #     ) 
 
-                # # start TLS for security
-                # s.starttls()
+            # # filename = fd.askopenfilename(
+            # #     title='Open a file',
+            # #     initialdir='/',
+            # #     filetypes=filetypes)
+            # filename = fd.askopenfilename()
 
-                # # Authentication
-                # s.login("adityaramdaspatil@gmail.com", "zbht hbqb ztwm zxex")
-
-                # # message to be sent
-                # message = str(rand)
-
-                # # sending the mail
-                # s.sendmail("adityaramdaspatil@gmail.com", client_email, message)
-
-                # # terminating the session
-                # s.quit()
+            # showinfo(
+            #     title='Selected File',
+            #     message = filename
+            # )
+            
+            # print(filename)
