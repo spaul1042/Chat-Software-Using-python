@@ -1,7 +1,5 @@
 # if message == "NICK":
 #               self.sock.send(self.nickname.encode('utf-8'))
-
-
 import socket 
 import threading
 import tkinter 
@@ -12,6 +10,7 @@ import sqlite3
 HOST = "127.0.0.2"
 # HOST = "0.0.0.0"
 PORT = 9000
+
 
 # We create a client which has a socket , The socket connects to Host and port 
 # The client takes nickname fro the dialog box 
@@ -125,7 +124,7 @@ class Client:
     
     def __init__(self , host , port):
         
-        # msg = tkinter.Tk()
+        msg = tkinter.Tk()
         # msg.withdraw()
         # self.nickname = simpledialog.askstring("Nickname" , "Please Choose a nickname", parent = msg)
         
@@ -141,7 +140,8 @@ class Client:
                 cur = conn.cursor()
                 cur.execute("SELECT * FROM test WHERE email=? AND password=?",(e1.get(),e2.get()))
                 row=cur.fetchall()
-                conn.close()
+                conn.commit()
+                cur.close()
                 print(row)
                 if row!=[]:
                     user_name=row[0][1]
@@ -194,7 +194,7 @@ class Client:
                 conn = sqlite3.connect("1.db") #create an object to call sqlite3 module & connect to a database 1.db
                 #once you have a connection, you can create a cursor object and call its execute() method to perform SQL commands
                 cur = conn.cursor()
-                cur.execute("CREATE TABLE IF NOT EXISTS test(id INTEGER PRIMARY KEY,name text,email_text,password_text)")
+                cur.execute("CREATE TABLE IF NOT EXISTS test([id] INTEGER PRIMARY KEY,[name] text,[email] text,[password] text)")
                 cur.execute("INSERT INTO test Values(Null,?,?,?)",(e1.get(),e2.get(),e3.get()))
                 
                 #execute message after account successfully created
@@ -202,7 +202,7 @@ class Client:
                 l4.place(x = 420,y = 449)
                 
                 conn.commit()  #save the changes 
-                conn.close() #close the connection
+                cur.close() #close the connection
 
             window.destroy()  #closes the previous window
             signup_window = Tk() #creates a new window for signup process
@@ -239,17 +239,24 @@ class Client:
         #Actions on Pressing Reset button
         def reset():
 
-                def pass_reset(new_pass,client_email):
-                    conn = sqlite3.connect("1.db") #create an object to call sqlite3 module & connect to a database 1.db
-                    #once you have a connection, you can create a cursor object and call its execute() method to perform SQL commands
-                    cur = conn.cursor()
-                    cur.execute("UPDATE test set password_text ="+new_pass+" where email_text ="+str(client_email))
-        
-                    # save the changes
-                    cur.commit()
-                    l1 = Label(reset_window,text="password reset sucessfull",font="times 20")
-                    l1.place(x = 340,y = 420) 
-
+                def pass_reset(new_pass,client_email,code_text,rand,reset_window):
+                    if code_text==rand:
+                        conn = sqlite3.connect("1.db") #create an object to call sqlite3 module & connect to a database 1.db
+                        #once you have a connection, you can create a cursor object and call its execute() method to perform SQL commands
+                        cur = conn.cursor()
+                        # cur.execute("UPDATE test set password_text ="+new_pass+" where email_text ="+str(client_email))
+                        sql_update_query = """Update test set password = ? where email = ?"""
+                        data = (new_pass, client_email)
+                        cur.execute(sql_update_query, data)
+                        # save the changes
+                        conn.commit()
+                        cur.close()
+                        l1 = Label(reset_window,text="password reset sucessfull",font="times 20")
+                        l1.place(x = 340,y = 500) 
+                    else:
+                        l1 = Label(reset_window,text="Wrong Code: ",font="times 20")
+                        l1.place(x = 340,y = 500) 
+                        
                 def reset_through_email(client_email):
                     from random import randint
                     rand=randint(1000,9999)
@@ -264,7 +271,6 @@ class Client:
                     code_text = StringVar() #stores string
                     e1 = Entry(reset_window,textvariable=code_text)
                     e1.place(x = 500,y = 260)
-
                     l2 = Label(reset_window,text="new_pass: ",font="times 20")
                     l2.place(x = 340,y = 320) 
                     #creating adjacent text entries
@@ -279,8 +285,9 @@ class Client:
                     e3 = Entry(reset_window,textvariable=cnf_pass)
                     e3.place(x = 500,y = 380)
                     # create 1 button to reset pass
-                    b = Button(reset_window,text="reset password",width=13,command=lambda:pass_reset(e2.get(),client_email))
+                    b = Button(reset_window,text="reset password",width=13,command=lambda:pass_reset(e2.get(),client_email,e1.get(),str(rand),reset_window))
                     b.place(x = 420,y = 440)
+                    
 
                 # window.destroy()  #closes the previous window
                 reset_window = Tk() #creates a new window for loging in
@@ -297,34 +304,16 @@ class Client:
                 # create 1 button to reset pass
                 b = Button(reset_window,text="get email",width=13,command=lambda:reset_through_email(e1.get()))
                 b.place(x = 420,y = 329)
-
-                # code = StringVar()
-                # e1 = Entry(reset_window,textvariable=code,show='*')
-                # e1.place(x = 500,y = 329)
-                # if code ==rand:
-                #     new_pass = StringVar()
-                #     e2 = Entry(reset_window,textvariable=new_pass,show='*')
-                #     e2.place(x = 500,y = 209)
-
-                #     cnf_pass = StringVar()
-                #     e3 = Entry(reset_window,textvariable=cnf_pass,show='*')
-                #     e3.place(x = 500,y = 269)
-
-                #     #create 1 button to reset pass
-                #     b = Button(reset_window,text="reset",width=13,command=lambda:reset(new_pass,client_email))
-                #     b.place(x = 420,y = 329)
-                # else:
-                #     print("code does not match")
-                reset_window.mainloop()        
-        
-        
-        
+                
+                reset_window.mainloop()     
+                
         #main window code and driver code
         #give dimensions to the window
         window.geometry("800x500")
         #add title to the window
         window.title("Login and Signup system")
         #adding the label "Register Here"
+        # bg1 = PhotoImage(file = "home.png")
         label1 = Label(window, text="Register Here!",font="times 20").place(x = 340,y = 200) 
         
         #adding two buttons - login and signup
