@@ -1,7 +1,5 @@
 # if message == "NICK":
 #               self.sock.send(self.nickname.encode('utf-8'))
-
-
 import socket 
 import threading
 import tkinter 
@@ -9,9 +7,10 @@ import tkinter.scrolledtext
 from tkinter import *
 import sqlite3 
 
-HOST = "127.0.0.2"
+HOST = "172.16.177.213"
 # HOST = "0.0.0.0"
 PORT = 9000
+
 
 # We create a client which has a socket , The socket connects to Host and port 
 # The client takes nickname fro the dialog box 
@@ -141,7 +140,8 @@ class Client:
                 cur = conn.cursor()
                 cur.execute("SELECT * FROM test WHERE email=? AND password=?",(e1.get(),e2.get()))
                 row=cur.fetchall()
-                conn.close()
+                conn.commit()
+                cur.close()
                 print(row)
                 if row!=[]:
                     user_name=row[0][1]
@@ -194,7 +194,7 @@ class Client:
                 conn = sqlite3.connect("1.db") #create an object to call sqlite3 module & connect to a database 1.db
                 #once you have a connection, you can create a cursor object and call its execute() method to perform SQL commands
                 cur = conn.cursor()
-                cur.execute("CREATE TABLE IF NOT EXISTS test(id INTEGER PRIMARY KEY,name text,email_text,password_text)")
+                cur.execute("CREATE TABLE IF NOT EXISTS test([id] INTEGER PRIMARY KEY,[name] text,[email] text,[password] text)")
                 cur.execute("INSERT INTO test Values(Null,?,?,?)",(e1.get(),e2.get(),e3.get()))
                 
                 #execute message after account successfully created
@@ -202,7 +202,7 @@ class Client:
                 l4.place(x = 420,y = 449)
                 
                 conn.commit()  #save the changes 
-                conn.close() #close the connection
+                cur.close() #close the connection
 
             window.destroy()  #closes the previous window
             signup_window = Tk() #creates a new window for signup process
@@ -243,10 +243,13 @@ class Client:
                     conn = sqlite3.connect("1.db") #create an object to call sqlite3 module & connect to a database 1.db
                     #once you have a connection, you can create a cursor object and call its execute() method to perform SQL commands
                     cur = conn.cursor()
-                    cur.execute("UPDATE test set password_text ="+new_pass+" where email_text ="+str(client_email))
-        
+                    # cur.execute("UPDATE test set password_text ="+new_pass+" where email_text ="+str(client_email))
+                    sql_update_query = """Update test set password = ? where email = ?"""
+                    data = (new_pass, client_email)
+                    cur.execute(sql_update_query, data)
                     # save the changes
-                    cur.commit()
+                    conn.commit()
+                    cur.close()
                     l1 = Label(reset_window,text="password reset sucessfull",font="times 20")
                     l1.place(x = 340,y = 420) 
 
@@ -325,6 +328,7 @@ class Client:
         #add title to the window
         window.title("Login and Signup system")
         #adding the label "Register Here"
+        # bg1 = PhotoImage(file = "home.png")
         label1 = Label(window, text="Register Here!",font="times 20").place(x = 340,y = 200) 
         
         #adding two buttons - login and signup
