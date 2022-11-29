@@ -10,7 +10,7 @@ from tkinter import *
 import sqlite3 
 import os
 
-HOST = "172.16.182.129"
+HOST = "127.0.0.1"
 # HOST = "0.0.0.0"
 PORT = 9000
 
@@ -330,32 +330,35 @@ class Client:
         window.geometry("800x500")
         #add title to the window
         window.title("Login and Signup system")
-        window.configure(bg='#6B6B6B')
-        #adding the label "Register Here"
-        # bg1 = PhotoImage(file = "home.png")
-        label1 = Label(window, text="Register Here!",font="times 30",bg="#CCCCCC").place(x = 540,y = 150) 
+        
+        from PIL import Image, ImageTk
+        # Read the Image and resize using PIL
+        home_image= Image.open("G:\\Chat Software Using python\\home.png")
+        resize_home_image = home_image.resize((2000, 1000))
+        
+        # #Convert image into button 
+        # login_image= PhotoImage("G:\\Chat Software Using python\\login.png")
+        # # resize_login_image = login_image.resize((2000, 1000))
+        # signup_image= PhotoImage("G:\\Chat Software Using python\\signup.png")
+        # # resize_signup_image = signup_image.resize((2000, 1000))
+        
+        img = ImageTk.PhotoImage(resize_home_image)
+        
+        # create label and add resize image
+        label = Label(image=img)
+        label.image = img
+        label.pack()
+        # ,bg="#04aa6d"
+        label1 = Label(window, text="Register Here!",font="times 30",bg="#04aa6d").place(x = 540,y = 150) 
         
         #adding 3 buttons - login and signup and reset
-        button1 = Button(window,text="Login",width=10,font="times15",command=login,bg="#CCCCCC").place(x = 550,y = 260)
+        button1 = Button(window,text="Login",width=10,font="times15",command=login,bg="#04aa6d", borderwidth = 2).place(x = 300,y = 360)
 
-        button2 = Button(window,text="Signup",width=10,font="times15",command=signup,bg="#CCCCCC").place(x = 550,y = 320)
+        button2 = Button(window,text="Signup",width=10,font="times15",command=signup,bg="#04aa6d", borderwidth = 2).place(x = 440,y = 360)
 
-        button3 = Button(window,text="Password Reset",width=20,bg="#CCCCCC",font="times15",command=reset).place(x = 550,y = 380)
+        button3 = Button(window,text="Reset Password",width=20,font="times15",command=reset,bg="#04aa6d", borderwidth = 2).place(x = 580,y = 360)
         
-        #calling mainloop method which is used when your application is ready to run and it tells the code to keep displaying   
         
-        # # The below two threads will run simultaneously
-        # self.gui_done = False
-        # self.running  = True 
-
-        # gui_thread = threading.Thread(target = self.gui_loop )
-        # receive_thread = threading.Thread(target = self.receive )
-        
-        # gui_thread.start()
-        # receive_thread.start()
-        
-        # gui_thread.join()
-        # receive_thread.join()
         
         window.mainloop()
      

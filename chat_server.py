@@ -31,7 +31,7 @@ import threading
 import sqlite3
 
 # HOST = socket.gethostbyname(socket.gethostname())
-HOST = "172.16.182.129"
+HOST = "127.0.0.1"
 PORT = 9000
 
 sqlite3.connect('1.db')
