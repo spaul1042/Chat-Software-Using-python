@@ -253,10 +253,10 @@ class Client:
                         # save the changes
                         conn.commit()
                         cur.close()
-                        l1 = Label(reset_window,text="password reset sucessfull",font="times 40")
+                        l1 = Label(reset_window,text="password reset sucessfull",font="times 40",bg="#CCCCCC")
                         l1.place(x = 640,y = 500) 
                     else:
-                        l1 = Label(reset_window,text="Wrong Code",font="times 40")
+                        l1 = Label(reset_window,text="Wrong Code",font="times 40",bg="#CCCCCC")
                         l1.place(x = 640,y = 500) 
                         
                         
@@ -280,30 +280,30 @@ class Client:
                         handle_email(client_email,rand)
                         
                         #add Label to the window
-                        l1 = Label(reset_window,text="code: ",font="times 20")
+                        l1 = Label(reset_window,text="code: ",font="times 20",bg="#CCCCCC")
                         l1.place(x = 640,y = 260) 
                         #creating adjacent text entries
                         code_text = StringVar() #stores string
-                        e1 = Entry(reset_window,textvariable=code_text,width=20,font="times 20")
+                        e1 = Entry(reset_window,textvariable=code_text,width=20,font="times 20",bg="#CCCCCC")
                         e1.place(x = 1040,y = 260)
-                        l2 = Label(reset_window,text="new_pass: ",font="times 20")
+                        l2 = Label(reset_window,text="new_pass: ",font="times 20",bg="#CCCCCC")
                         l2.place(x = 640,y = 320) 
                         #creating adjacent text entries
                         new_pass = StringVar() #stores string
-                        e2 = Entry(reset_window,textvariable=new_pass,width=20,font="times 20")
+                        e2 = Entry(reset_window,textvariable=new_pass,width=20,font="times 20",bg="#CCCCCC")
                         e2.place(x = 1040,y = 320)
 
-                        l3 = Label(reset_window,text="confirm password: ",font="times 20")
+                        l3 = Label(reset_window,text="confirm password: ",font="times 20",bg="#CCCCCC")
                         l3.place(x = 640,y = 380) 
                         #creating adjacent text entries
                         cnf_pass = StringVar() #stores string
-                        e3 = Entry(reset_window,textvariable=cnf_pass,width=20,font="times 20")
+                        e3 = Entry(reset_window,textvariable=cnf_pass,width=20,font="times 20",bg="#CCCCCC")
                         e3.place(x = 1040,y = 380)
                         # create 1 button to reset pass
-                        b = Button(reset_window,text="reset password",width=13,command=lambda:pass_reset(e2.get(),client_email,e1.get(),str(rand),reset_window))
+                        b = Button(reset_window,text="reset password",bg="#CCCCCC",width=13,command=lambda:pass_reset(e2.get(),client_email,e1.get(),str(rand),reset_window))
                         b.place(x = 800,y = 440)
                     else:
-                        l1 = Label(reset_window,text="Wrong email",font="times 20")
+                        l1 = Label(reset_window,text="Wrong email",font="times 20",bg="#CCCCCC")
                         l1.place(x = 340,y = 260) 
 
                 window.destroy()  #closes the previous window
@@ -312,15 +312,15 @@ class Client:
                 reset_window.geometry("800x500")  #set dimensions to the window
                 reset_window.configure(bg="#6B6B6B")
                 #add Label to the window
-                l1 = Label(reset_window,text="email: ",font="times 40")
+                l1 = Label(reset_window,text="email: ",font="times 40",bg="#CCCCCC")
                 l1.place(x = 540,y = 260) 
                 #creating adjacent text entries
                 email_text = StringVar() #stores string
-                e1 = Entry(reset_window,textvariable=email_text,width=20,font="times 40")
+                e1 = Entry(reset_window,textvariable=email_text,width=20,font="times 40",bg="#CCCCCC")
                 e1.place(x = 940,y = 260)
 
                 # create 1 button to reset pass
-                b = Button(reset_window,text="get email",width=13,font="times15",command=lambda:reset_through_email(e1.get()))
+                b = Button(reset_window,text="get email",bg="#CCCCCC",width=13,font="times15",command=lambda:reset_through_email(e1.get()))
                 b.place(x = 700,y = 400)
                 
                 reset_window.mainloop()     
@@ -333,14 +333,14 @@ class Client:
         window.configure(bg='#6B6B6B')
         #adding the label "Register Here"
         # bg1 = PhotoImage(file = "home.png")
-        label1 = Label(window, text="Register Here!",font="times 30").place(x = 540,y = 150) 
+        label1 = Label(window, text="Register Here!",font="times 30",bg="#CCCCCC").place(x = 540,y = 150) 
         
         #adding 3 buttons - login and signup and reset
-        button1 = Button(window,text="Login",width=10,font="times15",command=login).place(x = 550,y = 260)
+        button1 = Button(window,text="Login",width=10,font="times15",command=login,bg="#CCCCCC").place(x = 550,y = 260)
 
-        button2 = Button(window,text="Signup",width=10,font="times15",command=signup).place(x = 550,y = 320)
+        button2 = Button(window,text="Signup",width=10,font="times15",command=signup,bg="#CCCCCC").place(x = 550,y = 320)
 
-        button3 = Button(window,text="Password Reset",width=20,font="times15",command=reset).place(x = 550,y = 380)
+        button3 = Button(window,text="Password Reset",width=20,bg="#CCCCCC",font="times15",command=reset).place(x = 550,y = 380)
         
         #calling mainloop method which is used when your application is ready to run and it tells the code to keep displaying   
         
