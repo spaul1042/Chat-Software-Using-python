@@ -261,36 +261,49 @@ class Client:
                         
                         
                 def reset_through_email(client_email):
-                    from random import randint
-                    rand=randint(1000,9999)
-                    handle_email(client_email,rand)
+                    conn = sqlite3.connect("1.db")
+                    cur = conn.cursor()
+                    cur.execute("SELECT * FROM test WHERE email=?",(client_email))
+                    row=cur.fetchall()
+                    conn.commit()
+                    cur.close()
+                    print(row)
                     reset_window = Tk() #creates a new window for loging in
                     reset_window.title("Reset Password")  #set title to the window
                     reset_window.geometry("800x500")  #set dimensions to the window
-                    #add Label to the window
-                    l1 = Label(reset_window,text="code: ",font="times 20")
-                    l1.place(x = 340,y = 260) 
-                    #creating adjacent text entries
-                    code_text = StringVar() #stores string
-                    e1 = Entry(reset_window,textvariable=code_text)
-                    e1.place(x = 500,y = 260)
-                    l2 = Label(reset_window,text="new_pass: ",font="times 20")
-                    l2.place(x = 340,y = 320) 
-                    #creating adjacent text entries
-                    new_pass = StringVar() #stores string
-                    e2 = Entry(reset_window,textvariable=new_pass)
-                    e2.place(x = 500,y = 320)
+                    #checks if email is present in db
+                    if row!=[]:
+                        from random import randint
+                        rand=randint(1000,9999)
+                        handle_email(client_email,rand)
+                        
+                        #add Label to the window
+                        l1 = Label(reset_window,text="code: ",font="times 20")
+                        l1.place(x = 340,y = 260) 
+                        #creating adjacent text entries
+                        code_text = StringVar() #stores string
+                        e1 = Entry(reset_window,textvariable=code_text)
+                        e1.place(x = 500,y = 260)
+                        l2 = Label(reset_window,text="new_pass: ",font="times 20")
+                        l2.place(x = 340,y = 320) 
+                        #creating adjacent text entries
+                        new_pass = StringVar() #stores string
+                        e2 = Entry(reset_window,textvariable=new_pass)
+                        e2.place(x = 500,y = 320)
 
-                    l3 = Label(reset_window,text="confirm password: ",font="times 20")
-                    l3.place(x = 340,y = 380) 
-                    #creating adjacent text entries
-                    cnf_pass = StringVar() #stores string
-                    e3 = Entry(reset_window,textvariable=cnf_pass)
-                    e3.place(x = 500,y = 380)
-                    # create 1 button to reset pass
-                    b = Button(reset_window,text="reset password",width=13,command=lambda:pass_reset(e2.get(),client_email,e1.get(),str(rand),reset_window))
-                    b.place(x = 420,y = 440)
-                    
+                        l3 = Label(reset_window,text="confirm password: ",font="times 20")
+                        l3.place(x = 340,y = 380) 
+                        #creating adjacent text entries
+                        cnf_pass = StringVar() #stores string
+                        e3 = Entry(reset_window,textvariable=cnf_pass)
+                        e3.place(x = 500,y = 380)
+                        # create 1 button to reset pass
+                        b = Button(reset_window,text="reset password",width=13,command=lambda:pass_reset(e2.get(),client_email,e1.get(),str(rand),reset_window))
+                        b.place(x = 420,y = 440)
+                    else:
+                        l1 = Label(reset_window,text="Wrong email",font="times 20")
+                        l1.place(x = 340,y = 260) 
+
                 window.destroy()  #closes the previous window
                 reset_window = Tk() #creates a new window for loging in
                 reset_window.title("Reset Password")  #set title to the window
@@ -318,7 +331,7 @@ class Client:
         # bg1 = PhotoImage(file = "home.png")
         label1 = Label(window, text="Register Here!",font="times 20").place(x = 340,y = 200) 
         
-        #adding two buttons - login and signup
+        #adding 3 buttons - login and signup and reset
         button1 = Button(window,text="Login",width=20,command=login).place(x = 250,y = 260)
 
         button2 = Button(window,text="Signup",width=20,command=signup).place(x = 435,y = 260)
@@ -378,8 +391,16 @@ class Client:
                     data = file.read(1024)
                     if not (data):
                         break
-                    self.sock.sendall(data)
-                    c += len(data)
+                    try:
+                        # self.sock.sendall(data)
+                        print(data)                        
+                        c += len(data)
+                        message = f"{self.nickname} : {data.decode('utf-8')}"
+                        self.sock.send(message.encode('utf-8'))
+                        # message = str(self.sock.recv(1024).decode('utf-8'))
+                    except:
+                        print("some error in sending file")
+                        break
 
             # file = open(filepath , "rb")
             # data = file.read()

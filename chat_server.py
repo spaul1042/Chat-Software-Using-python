@@ -77,7 +77,6 @@ def receive():
         print(f"connected with {address}")
         
         # client.send("NICK".encode('utf-8'))
-        from time import sleep
         nickname = client.recv(1024)
         
         nicknames.append(nickname)
