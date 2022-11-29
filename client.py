@@ -333,7 +333,8 @@ class Client:
         
         from PIL import Image, ImageTk
         # Read the Image and resize using PIL
-        home_image= Image.open("G:\\Chat Software Using python\\home.png")
+        path=os.getcwd()
+        home_image= Image.open(path+"\\home.png")
         resize_home_image = home_image.resize((2000, 1000))
         
         # #Convert image into button 
