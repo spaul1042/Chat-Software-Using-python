@@ -1,17 +1,7 @@
-filetypes = (
-            #         ('text files', '*.txt'),
-            #         ('All files', '*.*')
-            #     ) 
+login_btn = PhotoImage(file = path+"\\login.png")
 
-            # # filename = fd.askopenfilename(
-            # #     title='Open a file',
-            # #     initialdir='/',
-            # #     filetypes=filetypes)
-            # filename = fd.askopenfilename()
+        # Create button and image
+        img = Button(window, image = login_btn,
+			borderwidth = 0)
 
-            # showinfo(
-            #     title='Selected File',
-            #     message = filename
-            # )
-            
-            # print(filename)
+        img.pack()

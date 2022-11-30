@@ -13,7 +13,7 @@ import os
 HOST = "127.0.0.1"
 # HOST = "0.0.0.0"
 PORT = 9000
-
+path=os.getcwd()
 # We create a client which has a socket , The socket connects to Host and port 
 # The client takes nickname fro the dialog box 
 # We say gui is still not done and the connection is running 
@@ -155,7 +155,7 @@ class Client:
                     self.afterLogInActivity()
                     
                 else:
-                    l3.config(text="user not found")
+                    l3.config(text="user not found",bg="#C1C1C1")
 
 
             window.destroy()  #closes the previous window
@@ -165,7 +165,7 @@ class Client:
             
             from PIL import Image, ImageTk
             # Read the Image and resize using PIL
-            home_image= Image.open("G:\\Chat Software Using python\\home.png")
+            home_image= Image.open(path+"\\home.png")
             resize_home_image = home_image.resize((2000, 1000))
             
             # #Convert image into button 
@@ -182,24 +182,24 @@ class Client:
             label.pack()
         
             #add 2 Labels to the window
-            l1 = Label(login_window,text="email: ",font="times 23")
+            l1 = Label(login_window,text="email: ",font="times 23",bg="#C1C1C1")
             l1.place(x = 340,y = 200) 
-            l2 = Label(login_window,text="Password: ",font="times 23")
+            l2 = Label(login_window,text="Password: ",font="times 23",bg="#C1C1C1")
             l2.place(x = 340,y = 260) 
-            l3 = Label(login_window,font="times 23") 
+            l3 = Label(login_window,font="times 23",bg="#C1C1C1") 
             l3.place(x = 390,y = 389)
 
             #creating 2 adjacent text entries
             email_text = StringVar() #stores string
-            e1 = Entry(login_window,textvariable=email_text, font= "times20")
+            e1 = Entry(login_window,textvariable=email_text, font= "times20",bg="#C1C1C1")
             e1.place(x = 500,y = 209)
 
             password_text = StringVar()
-            e2 = Entry(login_window,textvariable=password_text,show='*', font= "times20")
+            e2 = Entry(login_window,textvariable=password_text,show='*', font= "times20",bg="#C1C1C1")
             e2.place(x = 500,y = 269)
 
             #create 1 button to login
-            b = Button(login_window,text="login",width=13,command=login_database, font= "times20")
+            b = Button(login_window,text="login",width=13,command=login_database, font= "times20",bg="#C1C1C1")
             b.place(x = 420,y = 329)
 
             #create 1 button to reset
@@ -219,7 +219,7 @@ class Client:
                 cur.execute("INSERT INTO test Values(Null,?,?,?)",(e1.get(),e2.get(),e3.get()))
                 
                 #execute message after account successfully created
-                l4 = Label(signup_window,text="account created",font="times 15")
+                l4 = Label(signup_window,text="account created",font="times 15",bg="#C1C1C1")
                 l4.place(x = 420,y = 449)
                 
                 conn.commit()  #save the changes 
@@ -232,7 +232,7 @@ class Client:
             
             from PIL import Image, ImageTk
             # Read the Image and resize using PIL
-            home_image= Image.open("G:\\Chat Software Using python\\home.png")
+            home_image= Image.open(path+"\\home.png")
             resize_home_image = home_image.resize((2000, 1000))
             
             # #Convert image into button 
@@ -249,29 +249,29 @@ class Client:
             label.pack()
             
             #create 3 Labels
-            l1 = Label(signup_window,text="User Name: ",font="times 20")
+            l1 = Label(signup_window,text="User Name: ",font="times 20",bg="#C1C1C1")
             l1.place(x = 340,y = 209)
 
-            l2 = Label(signup_window,text="User email: ",font="times 20")
+            l2 = Label(signup_window,text="User email: ",font="times 20",bg="#C1C1C1")
             l2.place(x = 340,y = 269)
 
-            l3 = Label(signup_window,text="Password: ",font="times 20")
+            l3 = Label(signup_window,text="Password: ",font="times 20",bg="#C1C1C1")
             l3.place(x = 340,y = 329)
             #create 3 adjacent text entries
             name_text = StringVar() #declaring string variable for storing name and password
-            e1 = Entry(signup_window,textvariable=name_text,font="times 20")
+            e1 = Entry(signup_window,textvariable=name_text,font="times 20",bg="#C1C1C1")
             e1.place(x = 500,y = 209)
 
             email_text = StringVar()
-            e2 = Entry(signup_window,textvariable=email_text,font="times 20")
+            e2 = Entry(signup_window,textvariable=email_text,font="times 20",bg="#C1C1C1")
             e2.place(x = 500,y = 269)
 
             password_text = StringVar()
-            e3 = Entry(signup_window,textvariable=password_text,show='*',font="times 20")
+            e3 = Entry(signup_window,textvariable=password_text,show='*',font="times 20",bg="#C1C1C1")
             e3.place(x = 500,y = 329)
 
             #create 1 button to signup
-            b1 = Button(signup_window,text="signup",width=20,command=signup_database, font="times 15")
+            b1 = Button(signup_window,text="signup",width=20,command=signup_database, font="times 15",bg="#C1C1C1")
             b1.place(x = 420,y = 389)
 
             signup_window.mainloop()
@@ -310,39 +310,39 @@ class Client:
                     reset_window = Tk() #creates a new window for loging in
                     reset_window.title("Reset Password")  #set title to the window
                     reset_window.geometry("800x500")  #set dimensions to the window
-                    reset_window.configure(bg="#6B6B6B")
+                    # reset_window.configure(bg="#6B6B6B")
                     #checks if email is present in db
                     if row!=[]:
                         from random import randint
                         rand=randint(1000,9999)
                         handle_email(client_email,rand)
-                        
                         #add Label to the window
-                        l1 = Label(reset_window,text="code: ",font="times 20",bg="#CCCCCC")
+                        l1 = Label(reset_window,text="code: ",font="times 20",bg="#C1C1C1")
                         l1.place(x = 640,y = 260) 
                         #creating adjacent text entries
                         code_text = StringVar() #stores string
-                        e1 = Entry(reset_window,textvariable=code_text,width=20,font="times 20",bg="#CCCCCC")
+                        e1 = Entry(reset_window,textvariable=code_text,width=20,font="times 20",bg="#C1C1C1")
                         e1.place(x = 1040,y = 260)
-                        l2 = Label(reset_window,text="new_pass: ",font="times 20",bg="#CCCCCC")
+                        l2 = Label(reset_window,text="new_pass: ",font="times 20",bg="#C1C1C1")
                         l2.place(x = 640,y = 320) 
                         #creating adjacent text entries
                         new_pass = StringVar() #stores string
-                        e2 = Entry(reset_window,textvariable=new_pass,width=20,font="times 20",bg="#CCCCCC")
+                        e2 = Entry(reset_window,textvariable=new_pass,width=20,font="times 20",bg="#C1C1C1")
                         e2.place(x = 1040,y = 320)
 
-                        l3 = Label(reset_window,text="confirm password: ",font="times 20",bg="#CCCCCC")
+                        l3 = Label(reset_window,text="confirm password: ",font="times 20",bg="#C1C1C1")
                         l3.place(x = 640,y = 380) 
                         #creating adjacent text entries
                         cnf_pass = StringVar() #stores string
-                        e3 = Entry(reset_window,textvariable=cnf_pass,width=20,font="times 20",bg="#CCCCCC")
+                        e3 = Entry(reset_window,textvariable=cnf_pass,width=20,font="times 20",bg="#C1C1C1")
                         e3.place(x = 1040,y = 380)
                         # create 1 button to reset pass
-                        b = Button(reset_window,text="reset password",bg="#CCCCCC",width=13,command=lambda:pass_reset(e2.get(),client_email,e1.get(),str(rand),reset_window))
+                        b = Button(reset_window,text="reset password",bg="#C1C1C1",width=20,font="times 15",command=lambda:pass_reset(e2.get(),client_email,e1.get(),str(rand),reset_window))
                         b.place(x = 800,y = 440)
                     else:
-                        l1 = Label(reset_window,text="Wrong email",font="times 20",bg="#CCCCCC")
+                        l1 = Label(reset_window,text="Wrong email",font="times 20",bg="#C1C1C1")
                         l1.place(x = 340,y = 260) 
+                    reset_window.mainloop()  
 
                 window.destroy()  #closes the previous window
                 reset_window = Tk() #creates a new window for loging in
@@ -350,7 +350,7 @@ class Client:
                 reset_window.geometry("800x500")  #set dimensions to the window
                 from PIL import Image, ImageTk
                 # Read the Image and resize using PIL
-                home_image= Image.open("G:\\Chat Software Using python\\home.png")
+                home_image= Image.open(path+"\\home.png")
                 resize_home_image = home_image.resize((2000, 1000))
                 
                 # #Convert image into button 
@@ -367,15 +367,15 @@ class Client:
                 label.pack()
                 
                 #add Label to the window
-                l1 = Label(reset_window,text="email: ",font="times 23",bg="#CCCCCC")
+                l1 = Label(reset_window,text="email: ",font="times 23",bg="#C1C1C1")
                 l1.place(x = 340,y = 300) 
                 #creating adjacent text entries
                 email_text = StringVar() #stores string
-                e1 = Entry(reset_window,textvariable=email_text,width=20,font="times 20",bg="#CCCCCC")
+                e1 = Entry(reset_window,textvariable=email_text,width=20,font="times 20",bg="#C1C1C1")
                 e1.place(x = 500,y = 300)
 
                 # create 1 button to reset pass
-                b = Button(reset_window,text="get email",bg="#CCCCCC",width=13,font="times15",command=lambda:reset_through_email(e1.get()))
+                b = Button(reset_window,text="get email",bg="#C1C1C1",width=13,font="times15",command=lambda:reset_through_email(e1.get()))
                 b.place(x = 500,y = 400)
                 
                 reset_window.mainloop()     
@@ -388,7 +388,6 @@ class Client:
         
         from PIL import Image, ImageTk
         # Read the Image and resize using PIL
-        path=os.getcwd()
         home_image= Image.open(path+"\\home.png")
         resize_home_image = home_image.resize((2000, 1000))
         
@@ -405,14 +404,23 @@ class Client:
         label.image = img
         label.pack()
         # ,bg="#04aa6d"
-        label1 = Label(window, text="Register Here!",font="times 30",bg="#04aa6d").place(x = 540,y = 150) 
+        
+        # login_btn = PhotoImage(file = path+"\\login.png")
+
+        # # Create button and image
+        # img = Button(window,image=login_btn,borderwidth = 0).place(x=0,y=0)
+
+        # img.pack()
+
+
+        label1 = Label(window, text="Register Here!",font="times 30",bg="#C1C1C1").place(x=740,y = 150) 
         
         #adding 3 buttons - login and signup and reset
-        button1 = Button(window,text="Login",width=10,font="times15",command=login,bg="#04aa6d", borderwidth = 2).place(x = 300,y = 360)
+        button1 = Button(window,text="Login",width=10,font="times15",command=login,bg="#C1C1C1", borderwidth = 2).place(x=600,y = 360)
 
-        button2 = Button(window,text="Signup",width=10,font="times15",command=signup,bg="#04aa6d", borderwidth = 2).place(x = 440,y = 360)
+        button2 = Button(window,text="Signup",width=10,font="times15",command=signup,bg="#C1C1C1", borderwidth = 2).place(x=800,y = 360)
 
-        button3 = Button(window,text="Reset Password",width=20,font="times15",command=reset,bg="#04aa6d", borderwidth = 2).place(x = 580,y = 360)
+        button3 = Button(window,text="Reset Password",width=20,font="times15",command=reset,bg="#C1C1C1", borderwidth = 2).place(x=1000,y = 360)
         
         
         
@@ -448,7 +456,7 @@ class Client:
             
             with open(filepath, "rb") as file:
                 c = 0
-
+                
                 # Running loop while c != file_size.
                 while c <= file_size:
                     data = file.read(1024)
@@ -475,6 +483,23 @@ class Client:
         self.win = tkinter.Tk()  # defined a tkinter window for self here 
         self.win.configure(bg ="lightgray")
         
+        # from PIL import Image, ImageTk
+        # # Read the Image and resize using PIL
+        # home_image= Image.open(path+"\\home.png")
+        # resize_home_image = home_image.resize((2000, 1000))
+        
+        # # #Convert image into button 
+        # # login_image= PhotoImage("G:\\Chat Software Using python\\login.png")
+        # # # resize_login_image = login_image.resize((2000, 1000))
+        # # signup_image= PhotoImage("G:\\Chat Software Using python\\signup.png")
+        # # # resize_signup_image = signup_image.resize((2000, 1000))
+        
+        # img = ImageTk.PhotoImage(resize_home_image)
+        
+        # # create label and add resize image
+        # label = Label(image=img)
+        # label.image = img
+        # label.pack()
         
         self.chat_label = tkinter.Label(self.win, text = "Chat: " ,bg = "lightgray")
         self.chat_label.config(font= ("Arial", 12))
@@ -550,10 +575,10 @@ class Client:
                             self.text_area.config(state ='disabled')
                 except ConnectionAbortedError:
                     break
-                except:
-                    print("Error")
-                    self.sock.close()
-                    break
+                # except:
+                #     print("Error")
+                #     self.sock.close()
+                #     break
 
 
 client = Client(HOST , PORT)
