@@ -37,13 +37,14 @@ PORT = 9000
 sqlite3.connect('1.db')
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
 server.bind((HOST, PORT))
 
 server.listen(100)
 
 clients = []
 nicknames = []
-
+typing_users = []
 # For broadcasting messages 
 def broadcast(message):
     for client in clients:
@@ -52,15 +53,52 @@ def broadcast(message):
 def handle(client):
     while True:
         try:
-            message = client.recv(1024)
-            print(f"{nicknames[clients.index(client)]} says {message}")
-            broadcast(message)
+            message = str(client.recv(1024).decode('utf-8'))
+            if(message[0] == '$'):
+                typing_users.append(str(message))  #$1 
+                temp_typing_users = set(typing_users)
+                type_string = ""
+                for user_name in temp_typing_users:
+                    type_string += user_name
+                
+                broadcast(str(type_string).encode('utf-8'))
+    
+                
+            elif(message[0] == '~'):
+                # message = ~nickname
+                temp_list = message.split('~') 
+                nontyping_user = '$' + temp_list[1] #$1
+                temp_typing_users = set(typing_users)
+                temp_typing_users.remove(nontyping_user)
+                
+                while nontyping_user in typing_users:
+                    try:
+                        typing_users.remove(nontyping_user)
+                    except:
+                        pass
+                    
+                type_string = ""
+                for user_name in temp_typing_users:
+                    type_string += user_name
+                    
+                if(type_string == ""):
+                    type_string = '$' 
+                broadcast(type_string.encode('utf-8'))
+            else:
+                print(f"{nicknames[clients.index(client)]} says {message}")
+                broadcast(message.encode('utf-8'))
         except:
             index = clients.index(client)
             clients.remove(client)
             client.close()
             nickname = nicknames[index]
             nicknames.remove(nickname)
+            online_users= '@'
+            
+            for name in nicknames:
+                online_users = online_users + str(name) + '@'
+            # print(online_users)    
+            broadcast(f"{online_users}".encode('utf-8'))
 
             break
     
@@ -69,7 +107,6 @@ def handle(client):
 def receive():
     while True:
         client,  address = server.accept()
-        
         # Problem The address is the local host address of the client, we want 
         # IPv4 Address. . . . . . . . . . . : 172.16.177.213
         # Subnet Mask . . . . . . . . . . . : 255.255.240.0
