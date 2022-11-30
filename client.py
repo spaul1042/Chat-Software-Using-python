@@ -137,27 +137,6 @@ class Client:
         
         #Actions on Pressing Login Button
         def login():
-            def login_database():
-                conn = sqlite3.connect("1.db")
-                cur = conn.cursor()
-                cur.execute("SELECT * FROM test WHERE email=? AND password=?",(e1.get(),e2.get()))
-                row=cur.fetchall()
-                conn.commit()
-                cur.close()
-                print(row)
-                if row!=[]:
-                    user_name=row[0][1]
-                    # l3.config(text="user name found with name: "+user_name)
-                    # This is the place from where the user will get logged in and will see the signup window further
-                    self.nickname  = user_name
-                    self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                    self.sock.connect((host, port))
-                    self.afterLogInActivity()
-                    
-                else:
-                    l3.config(text="user not found")
-
-
             window.destroy()  #closes the previous window
             login_window = Tk() #creates a new window for loging in
             login_window.title("LogIn")  #set title to the window
@@ -181,6 +160,27 @@ class Client:
             label.image = img
             label.pack()
         
+            def login_database():
+                conn = sqlite3.connect("1.db")
+                cur = conn.cursor()
+                cur.execute("SELECT * FROM test WHERE email=? AND password=?",(e1.get(),e2.get()))
+                row=cur.fetchall()
+                conn.commit()
+                cur.close()
+                print(row)
+                if row!=[]:
+                    login_window.destroy()
+                    user_name=row[0][1]
+                    # l3.config(text="user name found with name: "+user_name)
+                    # This is the place from where the user will get logged in and will see the signup window further
+                    self.nickname  = user_name
+                    self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                    self.sock.connect((host, port))
+                    self.afterLogInActivity()
+                    
+                else:
+                    l3.config(text="user not found")
+
             #add 2 Labels to the window
             l1 = Label(login_window,text="email: ",font="times 23")
             l1.place(x = 340,y = 200) 
@@ -417,12 +417,6 @@ class Client:
         home_image= Image.open("G:\\Chat Software Using python\\home.png")
         resize_home_image = home_image.resize((2000, 1000))
         
-        # #Convert image into button 
-        # login_image= PhotoImage("G:\\Chat Software Using python\\login.png")
-        # # resize_login_image = login_image.resize((2000, 1000))
-        # signup_image= PhotoImage("G:\\Chat Software Using python\\signup.png")
-        # # resize_signup_image = signup_image.resize((2000, 1000))
-        
         img = ImageTk.PhotoImage(resize_home_image)
         
         # create label and add resize image
@@ -497,15 +491,15 @@ class Client:
             
 
          # The entire gui of the chat window is written here 
-        self.win = tkinter.Tk()  # defined a tkinter window for self here 
-        self.win.configure(bg ="lightgray")
+        self.win = tkinter.Tk()  #  `defined a tkinter window for self here 
+        self.win.configure(bg ="#171717")
         
         
         self.chat_label = tkinter.Label(self.win, text = "Chat: " ,bg = "lightgray")
         self.chat_label.config(font= ("Arial", 12))
         self.chat_label.pack(padx = 20, pady = 5)
         
-        self.text_area = tkinter.scrolledtext.ScrolledText(self.win )
+        self.text_area = tkinter.scrolledtext.ScrolledText(self.win , bg = "lightgray")
         self.text_area.pack(padx = 20, pady = 5)
         self.text_area.configure(state ='disabled')
         
@@ -552,20 +546,21 @@ class Client:
                         print(message)
                         active_users = message.split('@')
                         print(active_users)
-                        # Label(self.win, font=('arial black',13),bg='Green',fg='white',text='Active Users',width=10).place(y=200,x=400)
-                        # active_users = Listbox(self.win,height=8,width=20)
-                        # active_users.place(x=80,y=230)
-                        self.active_area = tkinter.scrolledtext.ScrolledText(self.win )
-                        self.active_area.pack(padx = 20, pady = 5)
+                        
+                        self.active_label = tkinter.Label(self.win, text = "Active Users " ,bg = "lightgray")
+                        self.active_label.config(font= ("Arial", 12))
+                        self.active_label.place(x = 1250 , y = 20)
+                        
+                        self.active_area = tkinter.scrolledtext.ScrolledText(self.win, width= 40, height = 20 )
+                        # self.active_area.pack(padx = 20, pady = 5)
+                        self.active_area.place(x = 1150, y = 50)
                         self.active_area.configure(state ='disabled')
                         for user_name in active_users:
                             self.active_area.config(state = "normal")
                             self.active_area.insert('end', str(user_name+'\n'))
                             self.active_area.yview('end')
                             self.active_area.config(state ='disabled')
-                        # disty = 100
-                        # for user_name in active_users:
-                        #     demo_label = tkinter.Label(self.win, text = str(user_name),bg = "lightgray")
+                        
                         
                     else:
                         if self.gui_done:
