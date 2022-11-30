@@ -19,6 +19,8 @@ PORT = 9000
 # We say gui is still not done and the connection is running 
 # The we run two threads on eto build gui and other to deal with the server
 
+path=os.getcwd()
+
 def handle_email(client_email,rand):
     import smtplib
     from email.mime.multipart import MIMEMultipart
@@ -144,7 +146,7 @@ class Client:
             
             from PIL import Image, ImageTk
             # Read the Image and resize using PIL
-            home_image= Image.open("G:\\Chat Software Using python\\home.png")
+            home_image= Image.open(path+"\\home.png")
             resize_home_image = home_image.resize((2000, 1000))
             
             # #Convert image into button 
@@ -232,7 +234,7 @@ class Client:
             
             from PIL import Image, ImageTk
             # Read the Image and resize using PIL
-            home_image= Image.open("G:\\Chat Software Using python\\home.png")
+            home_image= Image.open(path+"\\home.png")
             resize_home_image = home_image.resize((2000, 1000))
             
             # #Convert image into button 
@@ -285,7 +287,7 @@ class Client:
                 reset_window.geometry("800x500")  #set dimensions to the window
                 from PIL import Image, ImageTk
                 # Read the Image and resize using PIL
-                home_image= Image.open("G:\\Chat Software Using python\\home.png")
+                home_image= Image.open(path+"\\home.png")
                 resize_home_image = home_image.resize((2000, 1000))
                 
                 # #Convert image into button 
@@ -302,23 +304,27 @@ class Client:
                 label.pack()
                 
                 
-                def pass_reset(new_pass,client_email,code_text,rand,reset_window):
-                    if code_text==rand:
-                        conn = sqlite3.connect("1.db") #create an object to call sqlite3 module & connect to a database 1.db
-                        #once you have a connection, you can create a cursor object and call its execute() method to perform SQL commands
-                        cur = conn.cursor()
-                        # cur.execute("UPDATE test set password_text ="+new_pass+" where email_text ="+str(client_email))
-                        sql_update_query = """Update test set password = ? where email = ?"""
-                        data = (new_pass, client_email)
-                        cur.execute(sql_update_query, data)
-                        # save the changes
-                        conn.commit()
-                        cur.close()
-                        l1 = Label(reset_window,text="Password reset successfull",font="times 25")
-                        l1.place(x = 420,y = 435) 
+                def pass_reset(new_pass,cnf_pass,client_email,code_text,rand,reset_window):
+                    if new_pass==cnf_pass:
+                        if code_text==rand:
+                            conn = sqlite3.connect("1.db") #create an object to call sqlite3 module & connect to a database 1.db
+                            #once you have a connection, you can create a cursor object and call its execute() method to perform SQL commands
+                            cur = conn.cursor()
+                            # cur.execute("UPDATE test set password_text ="+new_pass+" where email_text ="+str(client_email))
+                            sql_update_query = """Update test set password = ? where email = ?"""
+                            data = (new_pass, client_email)
+                            cur.execute(sql_update_query, data)
+                            # save the changes
+                            conn.commit()
+                            cur.close()
+                            l1 = Label(reset_window,text="Password reset successfull",font="times 25")
+                            l1.place(x = 420,y = 435) 
+                        else:
+                            l1 = Label(reset_window,text="         Wrong OTP             ",font="times 25")
+                            l1.place(x = 420,y = 435) 
                     else:
-                        l1 = Label(reset_window,text="         Wrong OTP             ",font="times 25")
-                        l1.place(x = 420,y = 435) 
+                        l4 = Label(reset_window,text="Password did not Match",font="times 25")
+                        l4.place(x = 250,y = 440) 
                         
                         
                 def reset_through_email(client_email):
@@ -344,7 +350,7 @@ class Client:
                         reset_window2.geometry("800x500")  #set dimensions to the window
                         from PIL import Image, ImageTk
                         # Read the Image and resize using PIL
-                        home_image= Image.open("G:\\Chat Software Using python\\home.png")
+                        home_image= Image.open(path+"\\home.png")
                         resize_home_image = home_image.resize((2000, 1000))
                         
                         # #Convert image into button 
@@ -380,7 +386,7 @@ class Client:
                         e3 = Entry(reset_window2,textvariable=cnf_pass,width=20,font="times 20",bg="#CCCCCC")
                         e3.place(x = 450,y = 380)
                         # create 1 button to reset pass
-                        b = Button(reset_window2,text="Reset Password",bg="#CCCCCC",font="times 15",width=13,command=lambda:pass_reset(e2.get(),client_email,e1.get(),str(rand),reset_window2))
+                        b = Button(reset_window2,text="Reset Password",bg="#CCCCCC",font="times 15",width=13,command=lambda:pass_reset(e2.get(),e3.get(),client_email,e1.get(),str(rand),reset_window2))
                         b.place(x = 250,y = 440)
                     else:
                         reset_window.destroy()
@@ -414,7 +420,7 @@ class Client:
         
         from PIL import Image, ImageTk
         # Read the Image and resize using PIL
-        home_image= Image.open("G:\\Chat Software Using python\\home.png")
+        home_image= Image.open(path+"\\home.png")
         resize_home_image = home_image.resize((2000, 1000))
         
         img = ImageTk.PhotoImage(resize_home_image)
