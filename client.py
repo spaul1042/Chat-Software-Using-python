@@ -13,7 +13,7 @@ import os
 HOST = "127.0.0.1"
 # HOST = "0.0.0.0"
 PORT = 9000
-path=os.getcwd()
+
 # We create a client which has a socket , The socket connects to Host and port 
 # The client takes nickname fro the dialog box 
 # We say gui is still not done and the connection is running 
@@ -137,27 +137,6 @@ class Client:
         
         #Actions on Pressing Login Button
         def login():
-            def login_database():
-                conn = sqlite3.connect("1.db")
-                cur = conn.cursor()
-                cur.execute("SELECT * FROM test WHERE email=? AND password=?",(e1.get(),e2.get()))
-                row=cur.fetchall()
-                conn.commit()
-                cur.close()
-                print(row)
-                if row!=[]:
-                    user_name=row[0][1]
-                    # l3.config(text="user name found with name: "+user_name)
-                    # This is the place from where the user will get logged in and will see the signup window further
-                    self.nickname  = user_name
-                    self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                    self.sock.connect((host, port))
-                    self.afterLogInActivity()
-                    
-                else:
-                    l3.config(text="user not found",bg="#C1C1C1")
-
-
             window.destroy()  #closes the previous window
             login_window = Tk() #creates a new window for loging in
             login_window.title("LogIn")  #set title to the window
@@ -165,7 +144,7 @@ class Client:
             
             from PIL import Image, ImageTk
             # Read the Image and resize using PIL
-            home_image= Image.open(path+"\\home.png")
+            home_image= Image.open("G:\\Chat Software Using python\\home.png")
             resize_home_image = home_image.resize((2000, 1000))
             
             # #Convert image into button 
@@ -181,25 +160,46 @@ class Client:
             label.image = img
             label.pack()
         
+            def login_database():
+                conn = sqlite3.connect("1.db")
+                cur = conn.cursor()
+                cur.execute("SELECT * FROM test WHERE email=? AND password=?",(e1.get(),e2.get()))
+                row=cur.fetchall()
+                conn.commit()
+                cur.close()
+                print(row)
+                if row!=[]:
+                    login_window.destroy()
+                    user_name=row[0][1]
+                    # l3.config(text="user name found with name: "+user_name)
+                    # This is the place from where the user will get logged in and will see the signup window further
+                    self.nickname  = user_name
+                    self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                    self.sock.connect((host, port))
+                    self.afterLogInActivity()
+                    
+                else:
+                    l3.config(text="user not found")
+
             #add 2 Labels to the window
-            l1 = Label(login_window,text="email: ",font="times 23",bg="#C1C1C1")
+            l1 = Label(login_window,text="email: ",font="times 23")
             l1.place(x = 340,y = 200) 
-            l2 = Label(login_window,text="Password: ",font="times 23",bg="#C1C1C1")
+            l2 = Label(login_window,text="Password: ",font="times 23")
             l2.place(x = 340,y = 260) 
-            l3 = Label(login_window,font="times 23",bg="#C1C1C1") 
+            l3 = Label(login_window,font="times 23") 
             l3.place(x = 390,y = 389)
 
             #creating 2 adjacent text entries
             email_text = StringVar() #stores string
-            e1 = Entry(login_window,textvariable=email_text, font= "times20",bg="#C1C1C1")
+            e1 = Entry(login_window,textvariable=email_text, font= "times20")
             e1.place(x = 500,y = 209)
 
             password_text = StringVar()
-            e2 = Entry(login_window,textvariable=password_text,show='*', font= "times20",bg="#C1C1C1")
+            e2 = Entry(login_window,textvariable=password_text,show='*', font= "times20")
             e2.place(x = 500,y = 269)
 
             #create 1 button to login
-            b = Button(login_window,text="login",width=13,command=login_database, font= "times20",bg="#C1C1C1")
+            b = Button(login_window,text="login",width=13,command=login_database, font= "times20")
             b.place(x = 420,y = 329)
 
             #create 1 button to reset
@@ -219,7 +219,7 @@ class Client:
                 cur.execute("INSERT INTO test Values(Null,?,?,?)",(e1.get(),e2.get(),e3.get()))
                 
                 #execute message after account successfully created
-                l4 = Label(signup_window,text="account created",font="times 15",bg="#C1C1C1")
+                l4 = Label(signup_window,text="account created",font="times 15")
                 l4.place(x = 420,y = 449)
                 
                 conn.commit()  #save the changes 
@@ -232,7 +232,7 @@ class Client:
             
             from PIL import Image, ImageTk
             # Read the Image and resize using PIL
-            home_image= Image.open(path+"\\home.png")
+            home_image= Image.open("G:\\Chat Software Using python\\home.png")
             resize_home_image = home_image.resize((2000, 1000))
             
             # #Convert image into button 
@@ -249,29 +249,29 @@ class Client:
             label.pack()
             
             #create 3 Labels
-            l1 = Label(signup_window,text="User Name: ",font="times 20",bg="#C1C1C1")
+            l1 = Label(signup_window,text="User Name: ",font="times 20")
             l1.place(x = 340,y = 209)
 
-            l2 = Label(signup_window,text="User email: ",font="times 20",bg="#C1C1C1")
+            l2 = Label(signup_window,text="User email: ",font="times 20")
             l2.place(x = 340,y = 269)
 
-            l3 = Label(signup_window,text="Password: ",font="times 20",bg="#C1C1C1")
+            l3 = Label(signup_window,text="Password: ",font="times 20")
             l3.place(x = 340,y = 329)
             #create 3 adjacent text entries
             name_text = StringVar() #declaring string variable for storing name and password
-            e1 = Entry(signup_window,textvariable=name_text,font="times 20",bg="#C1C1C1")
+            e1 = Entry(signup_window,textvariable=name_text,font="times 20")
             e1.place(x = 500,y = 209)
 
             email_text = StringVar()
-            e2 = Entry(signup_window,textvariable=email_text,font="times 20",bg="#C1C1C1")
+            e2 = Entry(signup_window,textvariable=email_text,font="times 20")
             e2.place(x = 500,y = 269)
 
             password_text = StringVar()
-            e3 = Entry(signup_window,textvariable=password_text,show='*',font="times 20",bg="#C1C1C1")
+            e3 = Entry(signup_window,textvariable=password_text,show='*',font="times 20")
             e3.place(x = 500,y = 329)
 
             #create 1 button to signup
-            b1 = Button(signup_window,text="signup",width=20,command=signup_database, font="times 15",bg="#C1C1C1")
+            b1 = Button(signup_window,text="signup",width=20,command=signup_database, font="times 15")
             b1.place(x = 420,y = 389)
 
             signup_window.mainloop()
@@ -279,78 +279,13 @@ class Client:
         #Actions on Pressing Reset button
         def reset():
 
-                def pass_reset(new_pass,client_email,code_text,rand,reset_window):
-                    if code_text==rand:
-                        conn = sqlite3.connect("1.db") #create an object to call sqlite3 module & connect to a database 1.db
-                        #once you have a connection, you can create a cursor object and call its execute() method to perform SQL commands
-                        cur = conn.cursor()
-                        # cur.execute("UPDATE test set password_text ="+new_pass+" where email_text ="+str(client_email))
-                        sql_update_query = """Update test set password = ? where email = ?"""
-                        data = (new_pass, client_email)
-                        cur.execute(sql_update_query, data)
-                        # save the changes
-                        conn.commit()
-                        cur.close()
-                        l1 = Label(reset_window,text="password reset sucessfull",font="times 40",bg="#CCCCCC")
-                        l1.place(x = 640,y = 500) 
-                    else:
-                        l1 = Label(reset_window,text="Wrong Code",font="times 40",bg="#CCCCCC")
-                        l1.place(x = 640,y = 500) 
-                        
-                        
-                def reset_through_email(client_email):
-                    conn = sqlite3.connect("1.db")
-                    cur = conn.cursor()
-                    print(client_email)
-                    cur.execute("SELECT * FROM test WHERE email=?",(client_email,))
-                    row=cur.fetchall()
-                    conn.commit()
-                    cur.close()
-                    print(row)
-                    reset_window = Tk() #creates a new window for loging in
-                    reset_window.title("Reset Password")  #set title to the window
-                    reset_window.geometry("800x500")  #set dimensions to the window
-                    # reset_window.configure(bg="#6B6B6B")
-                    #checks if email is present in db
-                    if row!=[]:
-                        from random import randint
-                        rand=randint(1000,9999)
-                        handle_email(client_email,rand)
-                        #add Label to the window
-                        l1 = Label(reset_window,text="code: ",font="times 20",bg="#C1C1C1")
-                        l1.place(x = 640,y = 260) 
-                        #creating adjacent text entries
-                        code_text = StringVar() #stores string
-                        e1 = Entry(reset_window,textvariable=code_text,width=20,font="times 20",bg="#C1C1C1")
-                        e1.place(x = 1040,y = 260)
-                        l2 = Label(reset_window,text="new_pass: ",font="times 20",bg="#C1C1C1")
-                        l2.place(x = 640,y = 320) 
-                        #creating adjacent text entries
-                        new_pass = StringVar() #stores string
-                        e2 = Entry(reset_window,textvariable=new_pass,width=20,font="times 20",bg="#C1C1C1")
-                        e2.place(x = 1040,y = 320)
-
-                        l3 = Label(reset_window,text="confirm password: ",font="times 20",bg="#C1C1C1")
-                        l3.place(x = 640,y = 380) 
-                        #creating adjacent text entries
-                        cnf_pass = StringVar() #stores string
-                        e3 = Entry(reset_window,textvariable=cnf_pass,width=20,font="times 20",bg="#C1C1C1")
-                        e3.place(x = 1040,y = 380)
-                        # create 1 button to reset pass
-                        b = Button(reset_window,text="reset password",bg="#C1C1C1",width=20,font="times 15",command=lambda:pass_reset(e2.get(),client_email,e1.get(),str(rand),reset_window))
-                        b.place(x = 800,y = 440)
-                    else:
-                        l1 = Label(reset_window,text="Wrong email",font="times 20",bg="#C1C1C1")
-                        l1.place(x = 340,y = 260) 
-                    reset_window.mainloop()  
-
                 window.destroy()  #closes the previous window
                 reset_window = Tk() #creates a new window for loging in
                 reset_window.title("Reset Password")  #set title to the window
                 reset_window.geometry("800x500")  #set dimensions to the window
                 from PIL import Image, ImageTk
                 # Read the Image and resize using PIL
-                home_image= Image.open(path+"\\home.png")
+                home_image= Image.open("G:\\Chat Software Using python\\home.png")
                 resize_home_image = home_image.resize((2000, 1000))
                 
                 # #Convert image into button 
@@ -366,16 +301,107 @@ class Client:
                 label.image = img
                 label.pack()
                 
+                
+                def pass_reset(new_pass,client_email,code_text,rand,reset_window):
+                    if code_text==rand:
+                        conn = sqlite3.connect("1.db") #create an object to call sqlite3 module & connect to a database 1.db
+                        #once you have a connection, you can create a cursor object and call its execute() method to perform SQL commands
+                        cur = conn.cursor()
+                        # cur.execute("UPDATE test set password_text ="+new_pass+" where email_text ="+str(client_email))
+                        sql_update_query = """Update test set password = ? where email = ?"""
+                        data = (new_pass, client_email)
+                        cur.execute(sql_update_query, data)
+                        # save the changes
+                        conn.commit()
+                        cur.close()
+                        l1 = Label(reset_window,text="Password reset successfull",font="times 25")
+                        l1.place(x = 420,y = 435) 
+                    else:
+                        l1 = Label(reset_window,text="         Wrong OTP             ",font="times 25")
+                        l1.place(x = 420,y = 435) 
+                        
+                        
+                def reset_through_email(client_email):
+                    conn = sqlite3.connect("1.db")
+                    cur = conn.cursor()
+                    print(client_email)
+                    cur.execute("SELECT * FROM test WHERE email=?",(client_email,))
+                    row=cur.fetchall()
+                    conn.commit()
+                    cur.close()
+                    print(row)
+                    
+                    
+                    #checks if email is present in db
+                    if row != []:
+                        from random import randint
+                        rand=randint(1000,9999)
+                        reset_window.destroy()
+                        handle_email(client_email,rand)
+                        # if email is sent open a new reset window 
+                        reset_window2 = Tk() #creates a new window for loging in
+                        reset_window2.title("Reset Password")  #set title to the window
+                        reset_window2.geometry("800x500")  #set dimensions to the window
+                        from PIL import Image, ImageTk
+                        # Read the Image and resize using PIL
+                        home_image= Image.open("G:\\Chat Software Using python\\home.png")
+                        resize_home_image = home_image.resize((2000, 1000))
+                        
+                        # #Convert image into button 
+                        # login_image= PhotoImage("G:\\Chat Software Using python\\login.png")
+                        # # resize_login_image = login_image.resize((2000, 1000))
+                        # signup_image= PhotoImage("G:\\Chat Software Using python\\signup.png")
+                        # # resize_signup_image = signup_image.resize((2000, 1000))
+                        
+                        img = ImageTk.PhotoImage(resize_home_image)
+                    
+                        # create label and add resize image
+                        label = Label(image=img)
+                        label.image = img
+                        label.pack()
+                        #add Label to the window
+                        l1 = Label(reset_window2,text="OTP ",font="times 20",bg="#CCCCCC")
+                        l1.place(x =50,y = 260) 
+                        #creating adjacent text entries
+                        code_text = StringVar() #stores string
+                        e1 = Entry(reset_window2,textvariable=code_text,width=20,font="times 20",bg="#CCCCCC")
+                        e1.place(x = 450,y = 260)
+                        l2 = Label(reset_window2,text="New Password: ",font="times 20",bg="#CCCCCC")
+                        l2.place(x = 50,y = 320) 
+                        #creating adjacent text entries
+                        new_pass = StringVar() #stores string
+                        e2 = Entry(reset_window2,textvariable=new_pass,width=20,font="times 20",bg="#CCCCCC")
+                        e2.place(x = 450,y = 320)
+
+                        l3 = Label(reset_window2,text="Confirm Password: ",font="times 20",bg="#CCCCCC")
+                        l3.place(x = 50,y = 380) 
+                        #creating adjacent text entries
+                        cnf_pass = StringVar() #stores string
+                        e3 = Entry(reset_window2,textvariable=cnf_pass,width=20,font="times 20",bg="#CCCCCC")
+                        e3.place(x = 450,y = 380)
+                        # create 1 button to reset pass
+                        b = Button(reset_window2,text="Reset Password",bg="#CCCCCC",font="times 15",width=13,command=lambda:pass_reset(e2.get(),client_email,e1.get(),str(rand),reset_window2))
+                        b.place(x = 250,y = 440)
+                    else:
+                        reset_window.destroy()
+                        reset_window2 = Tk() #creates a new window for loging in
+                        reset_window2.title("Reset Password")  #set title to the window
+                        reset_window2.geometry("800x500")  #
+                        reset_window2.configure(bg="#FF0000")
+                        l1 = Label(reset_window2,text="Your Email is not registered",font="times 20")
+                        l1.place(x = 250,y = 260) 
+
+                
                 #add Label to the window
-                l1 = Label(reset_window,text="email: ",font="times 23",bg="#C1C1C1")
+                l1 = Label(reset_window,text="email: ",font="times 23",bg="#CCCCCC")
                 l1.place(x = 340,y = 300) 
                 #creating adjacent text entries
                 email_text = StringVar() #stores string
-                e1 = Entry(reset_window,textvariable=email_text,width=20,font="times 20",bg="#C1C1C1")
+                e1 = Entry(reset_window,textvariable=email_text,width=20,font="times 20",bg="#CCCCCC")
                 e1.place(x = 500,y = 300)
 
                 # create 1 button to reset pass
-                b = Button(reset_window,text="get email",bg="#C1C1C1",width=13,font="times15",command=lambda:reset_through_email(e1.get()))
+                b = Button(reset_window,text="get email",bg="#CCCCCC",width=13,font="times15",command=lambda:reset_through_email(e1.get()))
                 b.place(x = 500,y = 400)
                 
                 reset_window.mainloop()     
@@ -388,14 +414,8 @@ class Client:
         
         from PIL import Image, ImageTk
         # Read the Image and resize using PIL
-        home_image= Image.open(path+"\\home.png")
+        home_image= Image.open("G:\\Chat Software Using python\\home.png")
         resize_home_image = home_image.resize((2000, 1000))
-        
-        # #Convert image into button 
-        # login_image= PhotoImage("G:\\Chat Software Using python\\login.png")
-        # # resize_login_image = login_image.resize((2000, 1000))
-        # signup_image= PhotoImage("G:\\Chat Software Using python\\signup.png")
-        # # resize_signup_image = signup_image.resize((2000, 1000))
         
         img = ImageTk.PhotoImage(resize_home_image)
         
@@ -404,23 +424,14 @@ class Client:
         label.image = img
         label.pack()
         # ,bg="#04aa6d"
-        
-        # login_btn = PhotoImage(file = path+"\\login.png")
-
-        # # Create button and image
-        # img = Button(window,image=login_btn,borderwidth = 0).place(x=0,y=0)
-
-        # img.pack()
-
-
-        label1 = Label(window, text="Register Here!",font="times 30",bg="#C1C1C1").place(x=740,y = 150) 
+        label1 = Label(window, text="Register Here!",font="times 30",bg="#04aa6d").place(x = 540,y = 150) 
         
         #adding 3 buttons - login and signup and reset
-        button1 = Button(window,text="Login",width=10,font="times15",command=login,bg="#C1C1C1", borderwidth = 2).place(x=600,y = 360)
+        button1 = Button(window,text="Login",width=10,font="times15",command=login,bg="#04aa6d", borderwidth = 2).place(x = 300,y = 360)
 
-        button2 = Button(window,text="Signup",width=10,font="times15",command=signup,bg="#C1C1C1", borderwidth = 2).place(x=800,y = 360)
+        button2 = Button(window,text="Signup",width=10,font="times15",command=signup,bg="#04aa6d", borderwidth = 2).place(x = 440,y = 360)
 
-        button3 = Button(window,text="Reset Password",width=20,font="times15",command=reset,bg="#C1C1C1", borderwidth = 2).place(x=1000,y = 360)
+        button3 = Button(window,text="Reset Password",width=20,font="times15",command=reset,bg="#04aa6d", borderwidth = 2).place(x = 580,y = 360)
         
         
         
@@ -456,7 +467,7 @@ class Client:
             
             with open(filepath, "rb") as file:
                 c = 0
-                
+
                 # Running loop while c != file_size.
                 while c <= file_size:
                     data = file.read(1024)
@@ -480,32 +491,15 @@ class Client:
             
 
          # The entire gui of the chat window is written here 
-        self.win = tkinter.Tk()  # defined a tkinter window for self here 
-        self.win.configure(bg ="lightgray")
+        self.win = tkinter.Tk()  #  `defined a tkinter window for self here 
+        self.win.configure(bg ="#171717")
         
-        # from PIL import Image, ImageTk
-        # # Read the Image and resize using PIL
-        # home_image= Image.open(path+"\\home.png")
-        # resize_home_image = home_image.resize((2000, 1000))
-        
-        # # #Convert image into button 
-        # # login_image= PhotoImage("G:\\Chat Software Using python\\login.png")
-        # # # resize_login_image = login_image.resize((2000, 1000))
-        # # signup_image= PhotoImage("G:\\Chat Software Using python\\signup.png")
-        # # # resize_signup_image = signup_image.resize((2000, 1000))
-        
-        # img = ImageTk.PhotoImage(resize_home_image)
-        
-        # # create label and add resize image
-        # label = Label(image=img)
-        # label.image = img
-        # label.pack()
         
         self.chat_label = tkinter.Label(self.win, text = "Chat: " ,bg = "lightgray")
         self.chat_label.config(font= ("Arial", 12))
         self.chat_label.pack(padx = 20, pady = 5)
         
-        self.text_area = tkinter.scrolledtext.ScrolledText(self.win )
+        self.text_area = tkinter.scrolledtext.ScrolledText(self.win , bg = "lightgray")
         self.text_area.pack(padx = 20, pady = 5)
         self.text_area.configure(state ='disabled')
         
@@ -552,20 +546,21 @@ class Client:
                         print(message)
                         active_users = message.split('@')
                         print(active_users)
-                        # Label(self.win, font=('arial black',13),bg='Green',fg='white',text='Active Users',width=10).place(y=200,x=400)
-                        # active_users = Listbox(self.win,height=8,width=20)
-                        # active_users.place(x=80,y=230)
-                        self.active_area = tkinter.scrolledtext.ScrolledText(self.win )
-                        self.active_area.pack(padx = 20, pady = 5)
+                        
+                        self.active_label = tkinter.Label(self.win, text = "Active Users " ,bg = "lightgray")
+                        self.active_label.config(font= ("Arial", 12))
+                        self.active_label.place(x = 1250 , y = 20)
+                        
+                        self.active_area = tkinter.scrolledtext.ScrolledText(self.win, width= 40, height = 20 )
+                        # self.active_area.pack(padx = 20, pady = 5)
+                        self.active_area.place(x = 1150, y = 50)
                         self.active_area.configure(state ='disabled')
                         for user_name in active_users:
                             self.active_area.config(state = "normal")
                             self.active_area.insert('end', str(user_name+'\n'))
                             self.active_area.yview('end')
                             self.active_area.config(state ='disabled')
-                        # disty = 100
-                        # for user_name in active_users:
-                        #     demo_label = tkinter.Label(self.win, text = str(user_name),bg = "lightgray")
+                        
                         
                     else:
                         if self.gui_done:
@@ -575,10 +570,10 @@ class Client:
                             self.text_area.config(state ='disabled')
                 except ConnectionAbortedError:
                     break
-                # except:
-                #     print("Error")
-                #     self.sock.close()
-                #     break
+                except:
+                    print("Error")
+                    self.sock.close()
+                    break
 
 
 client = Client(HOST , PORT)
