@@ -1,0 +1,2 @@
+with open('aditya','w') as file:
+    file.write('aditya\n\rpatil')
