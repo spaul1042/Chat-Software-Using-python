@@ -279,71 +279,6 @@ class Client:
         #Actions on Pressing Reset button
         def reset():
 
-                def pass_reset(new_pass,client_email,code_text,rand,reset_window):
-                    if code_text==rand:
-                        conn = sqlite3.connect("1.db") #create an object to call sqlite3 module & connect to a database 1.db
-                        #once you have a connection, you can create a cursor object and call its execute() method to perform SQL commands
-                        cur = conn.cursor()
-                        # cur.execute("UPDATE test set password_text ="+new_pass+" where email_text ="+str(client_email))
-                        sql_update_query = """Update test set password = ? where email = ?"""
-                        data = (new_pass, client_email)
-                        cur.execute(sql_update_query, data)
-                        # save the changes
-                        conn.commit()
-                        cur.close()
-                        l1 = Label(reset_window,text="password reset sucessfull",font="times 40",bg="#CCCCCC")
-                        l1.place(x = 640,y = 500) 
-                    else:
-                        l1 = Label(reset_window,text="Wrong Code",font="times 40",bg="#CCCCCC")
-                        l1.place(x = 640,y = 500) 
-                        
-                        
-                def reset_through_email(client_email):
-                    conn = sqlite3.connect("1.db")
-                    cur = conn.cursor()
-                    print(client_email)
-                    cur.execute("SELECT * FROM test WHERE email=?",(client_email,))
-                    row=cur.fetchall()
-                    conn.commit()
-                    cur.close()
-                    print(row)
-                    reset_window = Tk() #creates a new window for loging in
-                    reset_window.title("Reset Password")  #set title to the window
-                    reset_window.geometry("800x500")  #set dimensions to the window
-                    reset_window.configure(bg="#6B6B6B")
-                    #checks if email is present in db
-                    if row!=[]:
-                        from random import randint
-                        rand=randint(1000,9999)
-                        handle_email(client_email,rand)
-                        
-                        #add Label to the window
-                        l1 = Label(reset_window,text="code: ",font="times 20",bg="#CCCCCC")
-                        l1.place(x = 640,y = 260) 
-                        #creating adjacent text entries
-                        code_text = StringVar() #stores string
-                        e1 = Entry(reset_window,textvariable=code_text,width=20,font="times 20",bg="#CCCCCC")
-                        e1.place(x = 1040,y = 260)
-                        l2 = Label(reset_window,text="new_pass: ",font="times 20",bg="#CCCCCC")
-                        l2.place(x = 640,y = 320) 
-                        #creating adjacent text entries
-                        new_pass = StringVar() #stores string
-                        e2 = Entry(reset_window,textvariable=new_pass,width=20,font="times 20",bg="#CCCCCC")
-                        e2.place(x = 1040,y = 320)
-
-                        l3 = Label(reset_window,text="confirm password: ",font="times 20",bg="#CCCCCC")
-                        l3.place(x = 640,y = 380) 
-                        #creating adjacent text entries
-                        cnf_pass = StringVar() #stores string
-                        e3 = Entry(reset_window,textvariable=cnf_pass,width=20,font="times 20",bg="#CCCCCC")
-                        e3.place(x = 1040,y = 380)
-                        # create 1 button to reset pass
-                        b = Button(reset_window,text="reset password",bg="#CCCCCC",width=13,command=lambda:pass_reset(e2.get(),client_email,e1.get(),str(rand),reset_window))
-                        b.place(x = 800,y = 440)
-                    else:
-                        l1 = Label(reset_window,text="Wrong email",font="times 20",bg="#CCCCCC")
-                        l1.place(x = 340,y = 260) 
-
                 window.destroy()  #closes the previous window
                 reset_window = Tk() #creates a new window for loging in
                 reset_window.title("Reset Password")  #set title to the window
@@ -365,6 +300,97 @@ class Client:
                 label = Label(image=img)
                 label.image = img
                 label.pack()
+                
+                
+                def pass_reset(new_pass,client_email,code_text,rand,reset_window):
+                    if code_text==rand:
+                        conn = sqlite3.connect("1.db") #create an object to call sqlite3 module & connect to a database 1.db
+                        #once you have a connection, you can create a cursor object and call its execute() method to perform SQL commands
+                        cur = conn.cursor()
+                        # cur.execute("UPDATE test set password_text ="+new_pass+" where email_text ="+str(client_email))
+                        sql_update_query = """Update test set password = ? where email = ?"""
+                        data = (new_pass, client_email)
+                        cur.execute(sql_update_query, data)
+                        # save the changes
+                        conn.commit()
+                        cur.close()
+                        l1 = Label(reset_window,text="Password reset successfull",font="times 25")
+                        l1.place(x = 420,y = 435) 
+                    else:
+                        l1 = Label(reset_window,text="         Wrong OTP             ",font="times 25")
+                        l1.place(x = 420,y = 435) 
+                        
+                        
+                def reset_through_email(client_email):
+                    conn = sqlite3.connect("1.db")
+                    cur = conn.cursor()
+                    print(client_email)
+                    cur.execute("SELECT * FROM test WHERE email=?",(client_email,))
+                    row=cur.fetchall()
+                    conn.commit()
+                    cur.close()
+                    print(row)
+                    
+                    
+                    #checks if email is present in db
+                    if row != []:
+                        from random import randint
+                        rand=randint(1000,9999)
+                        reset_window.destroy()
+                        handle_email(client_email,rand)
+                        # if email is sent open a new reset window 
+                        reset_window2 = Tk() #creates a new window for loging in
+                        reset_window2.title("Reset Password")  #set title to the window
+                        reset_window2.geometry("800x500")  #set dimensions to the window
+                        from PIL import Image, ImageTk
+                        # Read the Image and resize using PIL
+                        home_image= Image.open("G:\\Chat Software Using python\\home.png")
+                        resize_home_image = home_image.resize((2000, 1000))
+                        
+                        # #Convert image into button 
+                        # login_image= PhotoImage("G:\\Chat Software Using python\\login.png")
+                        # # resize_login_image = login_image.resize((2000, 1000))
+                        # signup_image= PhotoImage("G:\\Chat Software Using python\\signup.png")
+                        # # resize_signup_image = signup_image.resize((2000, 1000))
+                        
+                        img = ImageTk.PhotoImage(resize_home_image)
+                    
+                        # create label and add resize image
+                        label = Label(image=img)
+                        label.image = img
+                        label.pack()
+                        #add Label to the window
+                        l1 = Label(reset_window2,text="OTP ",font="times 20",bg="#CCCCCC")
+                        l1.place(x =50,y = 260) 
+                        #creating adjacent text entries
+                        code_text = StringVar() #stores string
+                        e1 = Entry(reset_window2,textvariable=code_text,width=20,font="times 20",bg="#CCCCCC")
+                        e1.place(x = 450,y = 260)
+                        l2 = Label(reset_window2,text="New Password: ",font="times 20",bg="#CCCCCC")
+                        l2.place(x = 50,y = 320) 
+                        #creating adjacent text entries
+                        new_pass = StringVar() #stores string
+                        e2 = Entry(reset_window2,textvariable=new_pass,width=20,font="times 20",bg="#CCCCCC")
+                        e2.place(x = 450,y = 320)
+
+                        l3 = Label(reset_window2,text="Confirm Password: ",font="times 20",bg="#CCCCCC")
+                        l3.place(x = 50,y = 380) 
+                        #creating adjacent text entries
+                        cnf_pass = StringVar() #stores string
+                        e3 = Entry(reset_window2,textvariable=cnf_pass,width=20,font="times 20",bg="#CCCCCC")
+                        e3.place(x = 450,y = 380)
+                        # create 1 button to reset pass
+                        b = Button(reset_window2,text="Reset Password",bg="#CCCCCC",font="times 15",width=13,command=lambda:pass_reset(e2.get(),client_email,e1.get(),str(rand),reset_window2))
+                        b.place(x = 250,y = 440)
+                    else:
+                        reset_window.destroy()
+                        reset_window2 = Tk() #creates a new window for loging in
+                        reset_window2.title("Reset Password")  #set title to the window
+                        reset_window2.geometry("800x500")  #
+                        reset_window2.configure(bg="#FF0000")
+                        l1 = Label(reset_window2,text="Your Email is not registered",font="times 20")
+                        l1.place(x = 250,y = 260) 
+
                 
                 #add Label to the window
                 l1 = Label(reset_window,text="email: ",font="times 23",bg="#CCCCCC")
