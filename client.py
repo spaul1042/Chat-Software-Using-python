@@ -19,6 +19,8 @@ PORT = 9000
 # We say gui is still not done and the connection is running 
 # The we run two threads on eto build gui and other to deal with the server
 
+path=os.getcwd()
+
 def handle_email(client_email,rand):
     import smtplib
     from email.mime.multipart import MIMEMultipart
@@ -144,7 +146,7 @@ class Client:
             
             from PIL import Image, ImageTk
             # Read the Image and resize using PIL
-            home_image= Image.open("G:\\Chat Software Using python\\home.png")
+            home_image= Image.open(path+"\\home.png")
             resize_home_image = home_image.resize((2000, 1000))
             
             # #Convert image into button 
@@ -232,7 +234,7 @@ class Client:
             
             from PIL import Image, ImageTk
             # Read the Image and resize using PIL
-            home_image= Image.open("G:\\Chat Software Using python\\home.png")
+            home_image= Image.open(path+"\\home.png")
             resize_home_image = home_image.resize((2000, 1000))
             
             # #Convert image into button 
@@ -285,7 +287,7 @@ class Client:
                 reset_window.geometry("800x500")  #set dimensions to the window
                 from PIL import Image, ImageTk
                 # Read the Image and resize using PIL
-                home_image= Image.open("G:\\Chat Software Using python\\home.png")
+                home_image= Image.open(path+"\\home.png")
                 resize_home_image = home_image.resize((2000, 1000))
                 
                 # #Convert image into button 
@@ -302,23 +304,28 @@ class Client:
                 label.pack()
                 
                 
-                def pass_reset(new_pass,client_email,code_text,rand,reset_window):
-                    if code_text==rand:
-                        conn = sqlite3.connect("1.db") #create an object to call sqlite3 module & connect to a database 1.db
-                        #once you have a connection, you can create a cursor object and call its execute() method to perform SQL commands
-                        cur = conn.cursor()
-                        # cur.execute("UPDATE test set password_text ="+new_pass+" where email_text ="+str(client_email))
-                        sql_update_query = """Update test set password = ? where email = ?"""
-                        data = (new_pass, client_email)
-                        cur.execute(sql_update_query, data)
-                        # save the changes
-                        conn.commit()
-                        cur.close()
-                        l1 = Label(reset_window,text="Password reset successfull",font="times 25")
-                        l1.place(x = 420,y = 435) 
-                    else:
+                def pass_reset(new_pass,cnf_pass,client_email,code_text,rand,reset_window):
+                    
+                    if(code_text != rand):
                         l1 = Label(reset_window,text="         Wrong OTP             ",font="times 25")
                         l1.place(x = 420,y = 435) 
+                    elif (code_text==rand):
+                        if(new_pass == cnf_pass):
+                            conn = sqlite3.connect("1.db") #create an object to call sqlite3 module & connect to a database 1.db
+                            #once you have a connection, you can create a cursor object and call its execute() method to perform SQL commands
+                            cur = conn.cursor()
+                            # cur.execute("UPDATE test set password_text ="+new_pass+" where email_text ="+str(client_email))
+                            sql_update_query = """Update test set password = ? where email = ?"""
+                            data = (new_pass, client_email)
+                            cur.execute(sql_update_query, data)
+                            # save the changes
+                            conn.commit()
+                            cur.close()
+                            l1 = Label(reset_window,text="Password reset successfull",font="times 25")
+                            l1.place(x = 420,y = 435) 
+                        else:
+                            l4 = Label(reset_window,text="Password did not Match",font="times 25")
+                            l4.place(x = 420,y = 435) 
                         
                         
                 def reset_through_email(client_email):
@@ -344,7 +351,7 @@ class Client:
                         reset_window2.geometry("800x500")  #set dimensions to the window
                         from PIL import Image, ImageTk
                         # Read the Image and resize using PIL
-                        home_image= Image.open("G:\\Chat Software Using python\\home.png")
+                        home_image= Image.open(path+"\\home.png")
                         resize_home_image = home_image.resize((2000, 1000))
                         
                         # #Convert image into button 
@@ -380,7 +387,7 @@ class Client:
                         e3 = Entry(reset_window2,textvariable=cnf_pass,width=20,font="times 20",bg="#CCCCCC")
                         e3.place(x = 450,y = 380)
                         # create 1 button to reset pass
-                        b = Button(reset_window2,text="Reset Password",bg="#CCCCCC",font="times 15",width=13,command=lambda:pass_reset(e2.get(),client_email,e1.get(),str(rand),reset_window2))
+                        b = Button(reset_window2,text="Reset Password",bg="#CCCCCC",font="times 15",width=13,command=lambda:pass_reset(e2.get(),e3.get(),client_email,e1.get(),str(rand),reset_window2))
                         b.place(x = 250,y = 440)
                     else:
                         reset_window.destroy()
@@ -414,7 +421,7 @@ class Client:
         
         from PIL import Image, ImageTk
         # Read the Image and resize using PIL
-        home_image= Image.open("G:\\Chat Software Using python\\home.png")
+        home_image= Image.open(path+"\\home.png")
         resize_home_image = home_image.resize((2000, 1000))
         
         img = ImageTk.PhotoImage(resize_home_image)
@@ -464,10 +471,9 @@ class Client:
             
             print(filepath)
             file_size = os.path.getsize(filepath)
-            
             with open(filepath, "rb") as file:
                 c = 0
-
+                filedata=''
                 # Running loop while c != file_size.
                 while c <= file_size:
                     data = file.read(1024)
@@ -477,13 +483,16 @@ class Client:
                         # self.sock.sendall(data)
                         print(data)                        
                         c += len(data)
-                        message = f"{self.nickname} : {data.decode('utf-8')}"
-                        self.sock.send(message.encode('utf-8'))
+                        filedata=filedata+data.decode('utf-8')
+                        # message = f"{self.nickname} : {data.decode('utf-8')}"
+                        # self.sock.send(message.encode('utf-8'))
                         # message = str(self.sock.recv(1024).decode('utf-8'))
                     except:
                         print("some error in sending file")
                         break
-
+                message = '#'+f"{self.nickname} : {filedata}"
+                self.sock.send(message.encode('utf-8'))       
+                
             # file = open(filepath , "rb")
             # data = file.read()
             
@@ -499,6 +508,11 @@ class Client:
         self.chat_label.config(font= ("Arial", 12))
         self.chat_label.pack(padx = 20, pady = 5)
         
+        
+        self.who_typing = tkinter.scrolledtext.ScrolledText(self.win , bg = "lightgray",width= 80, height = 5)
+        self.who_typing.pack(padx = 20, pady = 5)
+        # self.who_typing.configure(state ='disabled')
+        
         self.text_area = tkinter.scrolledtext.ScrolledText(self.win , bg = "lightgray")
         self.text_area.pack(padx = 20, pady = 5)
         self.text_area.configure(state ='disabled')
@@ -510,13 +524,25 @@ class Client:
         self.input_area = tkinter.Text(self.win , height = 3)  
         self.input_area.pack(padx = 20, pady = 5)
             
+        # Send Message operation
         self.send_button = tkinter.Button(self.win, text ="Send" , command = self.write)
         self.send_button.config(font= ("Arial", 12))
         self.send_button.pack(padx = 20, pady = 5)
         
+        # Attach File Operation
         self.attach_button = tkinter.Button(self.win, text ="Attach" , command = browseFiles)
         self.attach_button.config(font= ("Arial", 12))
         self.attach_button.pack(padx = 20, pady = 5)
+        
+        # Typing Operation when self.win window is open
+        # t1 = threading.Thread(target=self.typing,)
+        # t2 = threading.Thread(target=self.nottyping,)
+        
+        # self.win.bind("<KeyPress>",t1.start())
+        # self.win.bind("<KeyRelease>",t2.start())
+        
+        self.win.bind("<KeyPress>",self.typing)
+        self.win.bind("<KeyRelease>",self.nottyping)
         
         self.gui_done = True
         
@@ -529,19 +555,37 @@ class Client:
         self.running = False
         self.win.destroy()
         self.sock.close()
-        exit(0)   
-    
+        exit(0)  
+        
     def write(self):
         message = f"{self.nickname} : {self.input_area.get('1.0', 'end')}"
         self.sock.send(message.encode('utf-8'))
         self.input_area.delete('1.0', 'end')
-            
+        
+    def typing(self, event):
+        print("Typing*****")
+        message = f"${self.nickname}"
+        self.sock.send(message.encode('utf-8'))
+    
+    def nottyping(self, event):
+        import time
+        time.sleep(0.01)
+        message = f"~{self.nickname}"
+        self.sock.send(message.encode('utf-8'))
+        
+        
     def receive(self):
+            # Token ->
+            # '@' -> new user joined and server broadcasted the list of active users
+            # '#' -> a user has sent a file in the group 
+            # '$' -> a user is typing
             while self.running:
                 try:
                     message = str(self.sock.recv(1024).decode('utf-8'))
-
-                    if(message[0] == '@'):
+                    
+                    l=message.split('#')
+                    
+                    if(message[0] == '@'): # New User Joined
                         print("user list received")
                         print(message)
                         active_users = message.split('@')
@@ -557,11 +601,40 @@ class Client:
                         self.active_area.configure(state ='disabled')
                         for user_name in active_users:
                             self.active_area.config(state = "normal")
-                            self.active_area.insert('end', str(user_name+'\n'))
+                            actual_user_name=user_name[2:len(user_name)-1]
+                            self.active_area.insert('end', str(actual_user_name+'\n'))
                             self.active_area.yview('end')
                             self.active_area.config(state ='disabled')
-                        
-                        
+                    elif len(l)==2: 
+                        l2=l[1].split(' : ')   
+                        self.text_area.config(state = "normal")
+                        self.text_area.insert('end', l2[0]+' : file sent')
+                        self.text_area.yview('end')
+                        self.text_area.config(state ='disabled')
+                        l3=l2[1].split('\r')
+                        filedata=''
+                        for data in l3:
+                            filedata=filedata+data
+                        with open(l2[0]+'s file','w') as file:
+                            file.write(filedata)
+                            
+                    elif(message[0] == '$'):
+                        typing_users = message.split('$')
+                        self.who_typing.delete("1.0", "end")
+                        cnt = 0
+                        for user_name in typing_users:
+                            if(user_name == ""):
+                                continue
+                            else:
+                                cnt += 1
+                                self.who_typing.config(state = "normal")
+                                self.who_typing.insert('end', str(user_name)+",")
+                                self.who_typing.yview('end')
+                            # self.who_typing.config(state ='disabled')
+                        if(cnt == 1):
+                            self.who_typing.insert('end', "is typing")
+                        elif(cnt >1 ):
+                            self.who_typing.insert('end', "are typing")
                     else:
                         if self.gui_done:
                             self.text_area.config(state = "normal")
