@@ -503,13 +503,12 @@ class Client:
         self.win = tkinter.Tk()  #  `defined a tkinter window for self here 
         self.win.configure(bg ="#171717")
         
-        
         self.chat_label = tkinter.Label(self.win, text = "Chat: " ,bg = "lightgray")
         self.chat_label.config(font= ("Arial", 12))
         self.chat_label.pack(padx = 20, pady = 5)
         
         
-        self.who_typing = tkinter.scrolledtext.ScrolledText(self.win , bg = "lightgray",width= 80, height = 5)
+        self.who_typing = tkinter.scrolledtext.ScrolledText(self.win , bg = "#90EE90",width= 80, height = 2)
         self.who_typing.pack(padx = 20, pady = 5)
         # self.who_typing.configure(state ='disabled')
         
@@ -521,16 +520,16 @@ class Client:
         self.msg_label.config(font= ("Arial", 12))
         self.msg_label.pack(padx = 20, pady = 5)
         
-        self.input_area = tkinter.Text(self.win , height = 3)  
+        self.input_area = tkinter.Text(self.win , height = 3, bg = "#CD950C")  
         self.input_area.pack(padx = 20, pady = 5)
             
         # Send Message operation
-        self.send_button = tkinter.Button(self.win, text ="Send" , command = self.write)
+        self.send_button = tkinter.Button(self.win, text ="Send" , command = self.write, bg = "#00FF00")
         self.send_button.config(font= ("Arial", 12))
         self.send_button.pack(padx = 20, pady = 5)
         
         # Attach File Operation
-        self.attach_button = tkinter.Button(self.win, text ="Attach" , command = browseFiles)
+        self.attach_button = tkinter.Button(self.win, text ="Attach" , command = browseFiles, bg ="#CD3278")
         self.attach_button.config(font= ("Arial", 12))
         self.attach_button.pack(padx = 20, pady = 5)
         
@@ -563,7 +562,6 @@ class Client:
         self.input_area.delete('1.0', 'end')
         
     def typing(self, event):
-        print("Typing*****")
         message = f"${self.nickname}"
         self.sock.send(message.encode('utf-8'))
     
@@ -595,7 +593,7 @@ class Client:
                         self.active_label.config(font= ("Arial", 12))
                         self.active_label.place(x = 1250 , y = 20)
                         
-                        self.active_area = tkinter.scrolledtext.ScrolledText(self.win, width= 40, height = 20 )
+                        self.active_area = tkinter.scrolledtext.ScrolledText(self.win, width= 40, height = 20, bg= "#3C99DC" )
                         # self.active_area.pack(padx = 20, pady = 5)
                         self.active_area.place(x = 1150, y = 50)
                         self.active_area.configure(state ='disabled')
@@ -608,7 +606,7 @@ class Client:
                     elif len(l)==2: 
                         l2=l[1].split(' : ')   
                         self.text_area.config(state = "normal")
-                        self.text_area.insert('end', l2[0]+' : file sent')
+                        self.text_area.insert('end', l2[0]+' : file sent\n')
                         self.text_area.yview('end')
                         self.text_area.config(state ='disabled')
                         l3=l2[1].split('\r')
@@ -636,7 +634,7 @@ class Client:
                         elif(cnt >1 ):
                             self.who_typing.insert('end', "are typing")
                     else:
-                        if self.gui_done:
+                        # if self.gui_done:
                             self.text_area.config(state = "normal")
                             self.text_area.insert('end', message)
                             self.text_area.yview('end')

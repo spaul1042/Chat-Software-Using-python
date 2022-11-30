@@ -70,6 +70,13 @@ def handle(client):
                 nontyping_user = '$' + temp_list[1] #$1
                 temp_typing_users = set(typing_users)
                 temp_typing_users.remove(nontyping_user)
+                
+                while nontyping_user in typing_users:
+                    try:
+                        typing_users.remove(nontyping_user)
+                    except:
+                        pass
+                    
                 type_string = ""
                 for user_name in temp_typing_users:
                     type_string += user_name
