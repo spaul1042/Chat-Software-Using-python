@@ -54,7 +54,36 @@ def handle(client):
     while True:
         try:
             message = str(client.recv(1024).decode('utf-8'))
-            if(message[0] == '$'):
+            
+            lst = message.split(" ")
+            cnt = 0
+            index = -1
+            print(lst)
+            if(lst[0] == "kick"):
+                for name in nicknames:
+                    if(str(name.decode('utf-8')) == lst[1]):
+                        print(str(name))
+                        index = cnt 
+                        break
+                    cnt += 1
+                if(index == -1):
+                    pass
+                else:
+                    clients[index].close()
+                    clients.remove(clients[index])
+                    nicknames.remove(nicknames[index])
+                    online_users= '@'
+                    
+                    for name in nicknames:
+                        online_users = online_users + str(name) + '@'
+                    # print(online_users)    
+                    print(nicknames,online_users)
+                    if(online_users == '@'):
+                        pass
+                    else:
+                        broadcast(f"{online_users}".encode('utf-8'))
+                    
+            elif(message[0] == '$'):
                 typing_users.append(str(message))  #$1 
                 temp_typing_users = set(typing_users)
                 type_string = ""
@@ -107,10 +136,10 @@ def handle(client):
 def receive():
     while True:
         client,  address = server.accept()
+        print(client)
         # Problem The address is the local host address of the client, we want 
         # IPv4 Address. . . . . . . . . . . : 172.16.177.213
         # Subnet Mask . . . . . . . . . . . : 255.255.240.0
-        
         print(f"connected with {address}")
         
         # client.send("NICK".encode('utf-8'))

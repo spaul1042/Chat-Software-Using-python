@@ -136,7 +136,8 @@ class Client:
         self.nickname  = " "
         #create an object to create a window
         window = Tk()
-        
+                
+               
         #Actions on Pressing Login Button
         def login():
             window.destroy()  #closes the previous window
@@ -149,11 +150,6 @@ class Client:
             home_image= Image.open(path+"\\home.png")
             resize_home_image = home_image.resize((2000, 1000))
             
-            # #Convert image into button 
-            # login_image= PhotoImage("G:\\Chat Software Using python\\login.png")
-            # # resize_login_image = login_image.resize((2000, 1000))
-            # signup_image= PhotoImage("G:\\Chat Software Using python\\signup.png")
-            # # resize_signup_image = signup_image.resize((2000, 1000))
             
             img = ImageTk.PhotoImage(resize_home_image)
             
@@ -443,7 +439,22 @@ class Client:
         
         
         window.mainloop()
-     
+    
+    def bot(self,command_list):
+            # command_list will be a list 
+            # Command 1 -> kick nickname
+            # Command 2 -> spam Message time
+            
+            if(command_list[0] == "kick"):
+                print(command_list)
+                message = f"kick {self.nickname}"
+                self.sock.send(message.encode('utf-8'))
+
+            elif(command_list[1] == "spam"):
+                pass
+            
+            else:
+                pass
     def afterLogInActivity(self):
         
         # The below two threads will run simultaneously
@@ -471,6 +482,7 @@ class Client:
             
             print(filepath)
             file_size = os.path.getsize(filepath)
+            
             with open(filepath, "rb") as file:
                 c = 0
                 filedata=''
@@ -480,10 +492,10 @@ class Client:
                     if not (data):
                         break
                     try:
-                        # self.sock.sendall(data)
+                    # self.sock.sendall(data)
                         print(data)                        
                         c += len(data)
-                        filedata=filedata+data.decode('utf-8')
+                        filedata=filedata+ data.decode('utf-8')
                         # message = f"{self.nickname} : {data.decode('utf-8')}"
                         # self.sock.send(message.encode('utf-8'))
                         # message = str(self.sock.recv(1024).decode('utf-8'))
@@ -491,12 +503,8 @@ class Client:
                         print("some error in sending file")
                         break
                 message = '#'+f"{self.nickname} : {filedata}"
-                self.sock.send(message.encode('utf-8'))       
-                
-            # file = open(filepath , "rb")
-            # data = file.read()
+                self.sock.send(message.encode('utf-8')) 
             
-            # self.sock.sendall(data)
             
 
          # The entire gui of the chat window is written here 
@@ -557,8 +565,15 @@ class Client:
         exit(0)  
         
     def write(self):
-        message = f"{self.nickname} : {self.input_area.get('1.0', 'end')}"
-        self.sock.send(message.encode('utf-8'))
+        message1 = f"{self.nickname} : {self.input_area.get('1.0', 'end')}"
+        self.sock.send(message1.encode('utf-8'))
+        # self.input_area.delete('1.0', 'end')
+        
+        command = f"{self.input_area.get('1.0', 'end')}"
+        lst = command.split(" ")
+        print(lst) 
+        if(lst[0] == "kick"):
+            self.bot(lst)
         self.input_area.delete('1.0', 'end')
         
     def typing(self, event):
@@ -603,8 +618,9 @@ class Client:
                             self.active_area.insert('end', str(actual_user_name+'\n'))
                             self.active_area.yview('end')
                             self.active_area.config(state ='disabled')
+                            
                     elif len(l)==2: 
-                        l2=l[1].split(' : ')   
+                        l2=l[1].split(':')  
                         self.text_area.config(state = "normal")
                         self.text_area.insert('end', l2[0]+' : file sent\n')
                         self.text_area.yview('end')
@@ -613,7 +629,7 @@ class Client:
                         filedata=''
                         for data in l3:
                             filedata=filedata+data
-                        with open(l2[0]+'s file','w') as file:
+                        with open(l2[0]+'s file.txt','w') as file:
                             file.write(filedata)
                             
                     elif(message[0] == '$'):
@@ -634,11 +650,13 @@ class Client:
                         elif(cnt >1 ):
                             self.who_typing.insert('end', "are typing")
                     else:
-                        # if self.gui_done:
+                        if self.gui_done:
                             self.text_area.config(state = "normal")
                             self.text_area.insert('end', message)
                             self.text_area.yview('end')
                             self.text_area.config(state ='disabled')
+                            
+                                
                 except ConnectionAbortedError:
                     break
                 except:
